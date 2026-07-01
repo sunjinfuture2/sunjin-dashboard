@@ -990,7 +990,7 @@
             
               <div class="control-item">
                 <div class="control-meta">
-                  <label for="control_basicChargeKwMonth_range">기본요금 단가</label>
+                  <label for="control_basicChargeKwMonth_range">전기기본요금 단가</label>
                   <div class="control-value-wrap">
                     <span class="control-value" data-control-badge="basicChargeKwMonth">9,810원/kW·월</span>
                     
@@ -998,7 +998,7 @@
                 </div>
                 <div class="control-field">
                   <input id="control_basicChargeKwMonth_range" type="range" min="0" max="30000" step="100" value="9810" data-input="basicChargeKwMonth">
-                  <input type="number" min="0" max="30000" step="100" value="9810" data-input="basicChargeKwMonth" aria-label="기본요금 단가">
+                  <input type="number" min="0" max="30000" step="100" value="9810" data-input="basicChargeKwMonth" aria-label="전기기본요금 단가">
                 </div>
                 <div class="base-hint">보고서 기본값: 9,810원/kW·월</div>
               </div>
@@ -1332,7 +1332,7 @@
               <span>PUE 1.25</span>
               <span>시설 CAPEX 270억</span>
               <span>전력량 단가 121.7원/kWh</span>
-              <span>기본요금 9,810원/kW·월</span>
+              <span>전기기본요금 9,810원/kW·월</span>
               <span>환율 1,500원/USD</span><span>감가상각 33/66/99%</span>
             </div>
           </div>
@@ -1352,7 +1352,7 @@
             </article>
             <article class="formula-card">
               <h3>전기료</h3>
-              <p><code>총 수전용량(kW) × 기본요금 × 12 + 사용 IT 전력(kW) × PUE × 8,760시간 × 가동률 × 전력량 단가</code></p>
+              <p><code>총 수전용량(kW) × 전기기본요금 × 12 + 사용 IT 전력(kW) × PUE × 8,760시간 × 가동률 × 전력량 단가</code></p>
             </article>
           </div>
         </section>
@@ -1498,7 +1498,7 @@
           { id: 'itPowerKw', label: 'IT 수전용량', suffix: 'kW', min: 1, max: 20000, step: 10, digits: 0, numberOnly: true },
           { id: 'facilityCapexEok', label: '시설 CAPEX', suffix: '억', min: 0, max: 1000, step: 10, digits: 0 },
           { id: 'energyCostRate', label: '전력량 요금단가', suffix: '원/kWh', min: 50, max: 300, step: 0.1, digits: 1 },
-          { id: 'basicChargeKwMonth', label: '기본요금 단가', suffix: '원/kW·월', min: 0, max: 30000, step: 100, digits: 0 }
+          { id: 'basicChargeKwMonth', label: '전기기본요금 단가', suffix: '원/kW·월', min: 0, max: 30000, step: 100, digits: 0 }
         ]
       },
       {
@@ -2083,7 +2083,7 @@
               <span>PUE ${formatPue()}</span>
               <span>시설 CAPEX ${eok(state.facilityCapexEok)}</span>
               <span>전력량 단가 ${nf1.format(state.energyCostRate)}원/kWh</span>
-              <span>기본요금 ${nf.format(state.basicChargeKwMonth)}원/kW·월</span>
+              <span>전기기본요금 ${nf.format(state.basicChargeKwMonth)}원/kW·월</span>
               ${isGpu ? `<span>환율 ${nf.format(state.fxKrwUsd)}원/USD</span><span>감가상각 ${getDepreciationText()}%</span>` : `<span>상면요율 ${nf.format(state.colocationFeeKwMonth)}원/kW·월</span><span>전기판매 ${nf1.format(state.electricSaleRate)}원/kWh</span>`}
             </div>
           </div>
@@ -2103,7 +2103,7 @@
             </article>
             <article class="formula-card">
               <h3>전기료</h3>
-              <p><code>총 수전용량(kW) × 기본요금 × 12 + 사용 IT 전력(kW) × PUE × 8,760시간 × 가동률 × 전력량 단가</code></p>
+              <p><code>총 수전용량(kW) × 전기기본요금 × 12 + 사용 IT 전력(kW) × PUE × 8,760시간 × 가동률 × 전력량 단가</code></p>
             </article>
           </div>
         </section>
