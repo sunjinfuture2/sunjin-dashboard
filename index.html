@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AIDC Revenue Simulator</title>
+</head>
+<body>
+  <p>
+    시뮬레이터로 이동합니다.
+    <a id="fallback-link">페이지를 직접 열기</a>
+  </p>
+  <noscript>
+    <p>이 페이지의 자동 이동 기능을 사용하려면 JavaScript를 활성화해야 합니다.</p>
+  </noscript>
+  <script>
+    const START_PAGE = "./Simulator_260701_3y_CAPEX_rev02.html";
+    const target = new URL(START_PAGE, window.location.href);
+
+    target.search = window.location.search;
+    target.hash = window.location.hash;
+    document.getElementById("fallback-link").href = target.href;
+    window.location.replace(target.href);
+  </script>
+</body>
+</html>
