@@ -968,7 +968,7 @@
   <div class="app-shell">
     <header class="hero">
       <div class="hero-copy">
-        <div class="eyebrow">AIDC Revenue Simulator V2</div>
+        <div class="eyebrow">AIDC Revenue Simulator</div>
         <h1>AIDC Rack 시스템 별<br>데이터센터 수익구조 시뮬레이션</h1>
         <p>
           서버/GPU 임대, 상면임대, 모델 비교를 한 화면에서 조정합니다.<br>
@@ -1044,13 +1044,13 @@
                 <div class="control-item">
                   <div class="control-meta">
                     <label>시설 유형 (신축/리모델링)</label>
-                    <span class="control-value" data-construction-badge="">신축</span>
+                    <span class="control-value" data-construction-badge="">리모델링</span>
                   </div>
                   <div class="segmented" role="group" aria-label="시설 유형 (신축/리모델링)">
                     
-                      <button type="button" class="segmented-btn " data-construction="remodel">리모델링 270억</button>
+                      <button type="button" class="segmented-btn active" data-construction="remodel">리모델링 270억</button>
                     
-                      <button type="button" class="segmented-btn active" data-construction="newbuild">신축 450억</button>
+                      <button type="button" class="segmented-btn " data-construction="newbuild">신축 450억</button>
                     
                   </div>
                   <div class="base-hint">신축 450억 · 리모델링 270억 (수정1 계산표 기준, 신축 대비 40% 절감)</div>
@@ -1060,13 +1060,13 @@
                 <div class="control-meta">
                   <label for="control_facilityCapexEok_range">시설 CAPEX</label>
                   <div class="control-value-wrap">
-                    <span class="control-value" data-control-badge="facilityCapexEok">450억</span>
+                    <span class="control-value" data-control-badge="facilityCapexEok">270억</span>
                     
                   </div>
                 </div>
                 <div class="control-field">
-                  <input id="control_facilityCapexEok_range" type="range" min="0" max="1000" step="10" value="450" data-input="facilityCapexEok">
-                  <input type="number" min="0" max="1000" step="10" value="450" data-input="facilityCapexEok" aria-label="시설 CAPEX">
+                  <input id="control_facilityCapexEok_range" type="range" min="0" max="1000" step="10" value="270" data-input="facilityCapexEok">
+                  <input type="number" min="0" max="1000" step="10" value="270" data-input="facilityCapexEok" aria-label="시설 CAPEX">
                 </div>
                 <div class="base-hint">보고서 기본값: 270억</div>
               </div>
@@ -1210,13 +1210,13 @@
         </article>
         <article class="summary-card">
           <span class="label">3년 누적 지출</span>
-          <div class="value">4,006억</div>
-          <div class="hint">IT CAPEX 1,170억 + 시설 450억</div>
+          <div class="value">3,826억</div>
+          <div class="hint">IT CAPEX 1,170억 + 시설 270억</div>
         </article>
         <article class="summary-card">
           <span class="label">3년 누적 손익</span>
-          <div class="value text-success">3,562억</div>
-          <div class="hint">BEP 1년차 · 누적 매출 대비 47.1% </div>
+          <div class="value text-success">3,742억</div>
+          <div class="hint">BEP 1년차 · 누적 매출 대비 49.4% </div>
         </article>
       </section>
         <div id="mainContent">
@@ -1379,13 +1379,13 @@
           <line class="gridline" x1="76" y1="262" x2="836" y2="262"></line><text class="tick" x="64" y="266" text-anchor="end">-908.2억</text><line class="gridline" x1="76" y1="202.49999999999997" x2="836" y2="202.49999999999997"></line><text class="tick" x="64" y="206.49999999999997" text-anchor="end">1,438억</text><line class="gridline" x1="76" y1="143" x2="836" y2="143"></line><text class="tick" x="64" y="147" text-anchor="end">3,784억</text><line class="gridline" x1="76" y1="83.49999999999997" x2="836" y2="83.49999999999997"></line><text class="tick" x="64" y="87.49999999999997" text-anchor="end">6,131억</text><line class="gridline" x1="76" y1="24" x2="836" y2="24"></line><text class="tick" x="64" y="28" text-anchor="end">8,477억</text><line class="gridline zero" x1="76" y1="238.96774193548384" x2="836" y2="238.96774193548384"></line>
           <line class="axis" x1="76" y1="262" x2="836" y2="262"></line>
           <line class="axis" x1="76" y1="24" x2="76" y2="262"></line>
-          <polyline class="line revenue" points="76,174.98924731182794 456,111.01075268817203 836,47.032258064516114"></polyline><circle class="dot revenue" cx="76" cy="174.98924731182794" data-series="revenue" data-index="0"></circle><circle class="dot revenue" cx="456" cy="111.01075268817203" data-series="revenue" data-index="1"></circle><circle class="dot revenue" cx="836" cy="47.032258064516114" data-series="revenue" data-index="2"></circle><polyline class="line expense" points="76,187.50612701970914 456,167.33536403352642 836,137.37337166893747"></polyline><circle class="dot expense" cx="76" cy="187.50612701970914" data-series="expense" data-index="0"></circle><circle class="dot expense" cx="456" cy="167.33536403352642" data-series="expense" data-index="1"></circle><circle class="dot expense" cx="836" cy="137.37337166893747" data-series="expense" data-index="2"></circle><polyline class="line profit" points="76,226.45086222760264 456,182.64313059012946 836,148.62662833106248"></polyline><circle class="dot profit" cx="76" cy="226.45086222760264" data-series="profit" data-index="0"></circle><circle class="dot profit" cx="456" cy="182.64313059012946" data-series="profit" data-index="1"></circle><circle class="dot profit" cx="836" cy="148.62662833106248" data-series="profit" data-index="2"></circle>
+          <polyline class="line revenue" points="76,174.98924731182794 456,111.01075268817203 836,47.032258064516114"></polyline><circle class="dot revenue" cx="76" cy="174.98924731182794" data-series="revenue" data-index="0"></circle><circle class="dot revenue" cx="456" cy="111.01075268817203" data-series="revenue" data-index="1"></circle><circle class="dot revenue" cx="836" cy="47.032258064516114" data-series="revenue" data-index="2"></circle><polyline class="line expense" points="76,192.07080272059784 456,171.90003973441512 836,141.93804736982617"></polyline><circle class="dot expense" cx="76" cy="192.07080272059784" data-series="expense" data-index="0"></circle><circle class="dot expense" cx="456" cy="171.90003973441512" data-series="expense" data-index="1"></circle><circle class="dot expense" cx="836" cy="141.93804736982617" data-series="expense" data-index="2"></circle><polyline class="line profit" points="76,221.88618652671394 456,178.07845488924076 836,144.06195263017378"></polyline><circle class="dot profit" cx="76" cy="221.88618652671394" data-series="profit" data-index="0"></circle><circle class="dot profit" cx="456" cy="178.07845488924076" data-series="profit" data-index="1"></circle><circle class="dot profit" cx="836" cy="144.06195263017378" data-series="profit" data-index="2"></circle>
           
-        <line class="hover-line" data-hover-index="0" x1="76" y1="24" x2="76" y2="262"></line>
+        <line class="hover-line" data-hover-index="0" x1="76" y1="24" x2="76" y2="262" style="opacity: 0;"></line>
       
-        <line class="hover-line" data-hover-index="1" x1="456" y1="24" x2="456" y2="262"></line>
+        <line class="hover-line" data-hover-index="1" x1="456" y1="24" x2="456" y2="262" style="opacity: 0;"></line>
       
-        <line class="hover-line" data-hover-index="2" x1="836" y1="24" x2="836" y2="262"></line>
+        <line class="hover-line" data-hover-index="2" x1="836" y1="24" x2="836" y2="262" style="opacity: 0;"></line>
       
           <rect class="hover-zone" data-hover-index="0" x="76" y="24" width="253.33333333333334" height="238"></rect><rect class="hover-zone" data-hover-index="1" x="329.3333333333333" y="24" width="253.33333333333334" height="238"></rect><rect class="hover-zone" data-hover-index="2" x="709.3333333333334" y="24" width="253.33333333333334" height="238"></rect>
           
@@ -1396,7 +1396,13 @@
         <text class="tick" x="836" y="292" text-anchor="middle">3년차</text>
       
         </svg>
-        <div class="chart-tooltip" id="chartTooltip"></div>
+        <div class="chart-tooltip" id="chartTooltip" style="transform: translate(501px, 74.2812px);">
+          <div class="tt-title">3년차</div>
+          <div class="tt-row"><span class="tt-dot" style="background:var(--primary)"></span>누적매출<b>7,569억</b></div>
+          <div class="tt-row"><span class="tt-dot" style="background:#f59e0b"></span>누적지출<b>3,826억</b></div>
+          <div class="tt-row"><span class="tt-dot" style="background:var(--success)"></span>누적손익<b>3,742억</b></div>
+          <div class="tt-row" style="opacity:0.7"><span class="tt-dot" style="background:transparent"></span>연손익<b>1,341억</b></div>
+        </div>
       </div>
           <div class="legend" id="legend">
         <div class="legend-item"><span class="swatch" style="background:var(--primary)"></span>누적 매출</div>
@@ -1428,7 +1434,7 @@
               <span>총 수전용량 2,500kW</span>
               <span>IT 수전용량 2,000kW</span>
               <span>PUE 1.25</span>
-              <span>시설 CAPEX 450억</span>
+              <span>시설 CAPEX 270억</span>
               <span>전력량 단가 121.7원/kWh</span>
               <span>전기기본요금 9,810원/kW·월</span>
               <span>환율 1,500원/USD</span><span>감가상각 33/66/99%</span>
@@ -1462,15 +1468,15 @@
               <h2>CAPEX 시설비 세부 내역 </h2>
               <p>신축·리모델링 기준 시설비 계산표입니다. 상단 '시설 유형' 토글로 전환하면 시설 CAPEX가 자동 반영됩니다. 전력·공조·통신 설비는 신축 여부와 무관하게 동일하며, 절감은 건축/토목·설계/간접비에서 발생합니다.</p>
             </div>
-            <span class="fac-pill newbuild">신축 적용 중 · 450억</span>
+            <span class="fac-pill remodel">리모델링 적용 중 · 270억</span>
           </div>
           <div class="table-scroll">
             <table class="facility-table">
               <thead>
                 <tr>
                   <th>상세내역</th>
-                  <th class="fac-num fac-active">신축 예산</th>
-                  <th class="fac-num ">리모델링 예산</th>
+                  <th class="fac-num ">신축 예산</th>
+                  <th class="fac-num fac-active">리모델링 예산</th>
                   <th class="fac-num">증감</th>
                   <th>비고 (원가 조정 논리)</th>
                 </tr>
@@ -1479,48 +1485,48 @@
                 
         <tr>
           <td><strong>전력설비</strong></td>
-          <td class="fac-num fac-active">94.5억</td>
           <td class="fac-num ">94.5억</td>
+          <td class="fac-num fac-active">94.5억</td>
           <td class="fac-num"><span class="fac-diff same">동일</span></td>
           <td class="fac-note">2.5MW 수배전반·UPS·비상발전 등 핵심 설비는 신축 여부와 무관하게 동일 용량 투입</td>
         </tr>
       
         <tr>
           <td><strong>공조/냉각설비</strong></td>
-          <td class="fac-num fac-active">67.5억</td>
           <td class="fac-num ">67.5억</td>
+          <td class="fac-num fac-active">67.5억</td>
           <td class="fac-num"><span class="fac-diff same">동일</span></td>
           <td class="fac-note">PUE 1.25 달성을 위한 DLC(액체냉각)·CRAH·Free Cooling 시스템 전액 반영</td>
         </tr>
       
         <tr>
           <td><strong>건축/토목</strong></td>
-          <td class="fac-num fac-active">180억</td>
-          <td class="fac-num ">54억</td>
+          <td class="fac-num ">180억</td>
+          <td class="fac-num fac-active">54억</td>
           <td class="fac-num"><span class="fac-diff save">-70%</span></td>
           <td class="fac-note">리모델링 시 기존 뼈대 100% 재활용, 터파기·외장 생략 후 하중 보강(3,000kg/㎡)·이중마루만 반영</td>
         </tr>
       
         <tr>
           <td><strong>통신/소방/보안</strong></td>
-          <td class="fac-num fac-active">27억</td>
           <td class="fac-num ">27억</td>
+          <td class="fac-num fac-active">27억</td>
           <td class="fac-num"><span class="fac-diff same">동일</span></td>
           <td class="fac-note">가스계 소화설비·광케이블·DCIM 등 데이터센터 필수 안전 시설 동일 적용</td>
         </tr>
       
         <tr>
           <td><strong>설계/감리/간접비</strong></td>
-          <td class="fac-num fac-active">81억</td>
-          <td class="fac-num ">27억</td>
+          <td class="fac-num ">81억</td>
+          <td class="fac-num fac-active">27억</td>
           <td class="fac-num"><span class="fac-diff save">-66%</span></td>
           <td class="fac-note">리모델링 시 대규모 인허가 절차 생략 및 총공사비 축소에 따른 엔지니어링 요율 하향 연동</td>
         </tr>
       
                 <tr class="fac-total">
                   <td><strong>총 시설 CAPEX</strong></td>
-                  <td class="fac-num fac-active"><strong>450억</strong></td>
-                  <td class="fac-num "><strong>270억</strong></td>
+                  <td class="fac-num "><strong>450억</strong></td>
+                  <td class="fac-num fac-active"><strong>270억</strong></td>
                   <td class="fac-num"><span class="fac-diff save">-40%</span></td>
                   <td class="fac-note">리모델링 선택 시 신축 대비 180억 원(약 40%) 절감</td>
                 </tr>
@@ -1555,12 +1561,12 @@
           <tr>
             <td><strong>1년차</strong></td>
             <td>2,523억</td>
-            <td>2,029억</td>
-            <td class="text-success">493.6억</td>
+            <td>1,849억</td>
+            <td class="text-success">673.6억</td>
             <td>2,523억</td>
-            <td>2,029억</td>
-            <td class="text-success"><strong>493.6억</strong></td>
-            <td>19.6%</td>
+            <td>1,849억</td>
+            <td class="text-success"><strong>673.6억</strong></td>
+            <td>26.7%</td>
           </tr>
         
           <tr>
@@ -1569,8 +1575,8 @@
             <td>795.4억</td>
             <td class="text-success">1,727억</td>
             <td>5,046억</td>
-            <td>2,825억</td>
-            <td class="text-success"><strong>2,221억</strong></td>
+            <td>2,645억</td>
+            <td class="text-success"><strong>2,401억</strong></td>
             <td>68.5%</td>
           </tr>
         
@@ -1580,8 +1586,8 @@
             <td>1,181억</td>
             <td class="text-success">1,341억</td>
             <td>7,569억</td>
-            <td>4,006억</td>
-            <td class="text-success"><strong>3,562억</strong></td>
+            <td>3,826억</td>
+            <td class="text-success"><strong>3,742억</strong></td>
             <td>53.2%</td>
           </tr>
         </tbody>
