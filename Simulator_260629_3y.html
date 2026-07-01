@@ -1,8 +1,6 @@
-<!doctype html>
-<html lang="ko">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<html lang="ko"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AIDC Revenue Simulator V2</title>
   <style>
     :root {
@@ -590,6 +588,7 @@
 
     .chart-panel { padding-bottom: 18px; }
     .chart-wrap {
+      position: relative;
       width: 100%;
       min-height: 315px;
       margin-top: 8px;
@@ -610,6 +609,62 @@
     .dot.revenue { fill: var(--primary); }
     .dot.expense { fill: #f59e0b; }
     .dot.profit { fill: var(--success); }
+    .dot.hover-active { r: 7; stroke-width: 3; }
+    .hover-zone { fill: transparent; cursor: crosshair; }
+    .hover-line {
+      stroke: #94a3b8;
+      stroke-width: 1;
+      stroke-dasharray: 4 5;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.12s ease;
+    }
+    .chart-tooltip {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 6;
+      min-width: 168px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #111827;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: 0 14px 30px rgba(17, 24, 39, 0.28);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-9999px, -9999px);
+      transition: opacity 0.12s ease;
+      white-space: nowrap;
+    }
+    .chart-tooltip.visible { opacity: 1; }
+    .chart-tooltip .tt-title {
+      font-size: 12px;
+      font-weight: 950;
+      color: #fff;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .chart-tooltip .tt-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 5px;
+      color: rgba(255, 255, 255, 0.82);
+    }
+    .chart-tooltip .tt-row:first-of-type { margin-top: 0; }
+    .chart-tooltip .tt-row b {
+      margin-left: auto;
+      color: #fff;
+      font-weight: 950;
+    }
+    .chart-tooltip .tt-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+    }
     .tick { fill: #64748b; font-size: 12px; font-weight: 850; }
     .legend {
       display: flex;
@@ -860,12 +915,509 @@
             <span class="soft-badge" id="controlScopeBadge">두 모델 공통</span>
           </div>
         </div>
-        <div class="controls-root" id="controlsRoot"></div>
+        <div class="controls-root" id="controlsRoot">
+        <section class="control-group" data-views="gpu,colo,compare" data-scope="두 모델 공통" style="display: block;">
+          <h3>공통 전력·운영 기준</h3>
+          
+              <div class="control-item">
+                <div class="control-meta">
+                  <label for="control_utilizationPct_range">목표 가동률</label>
+                  <div class="control-value-wrap">
+                    <span class="control-value" data-control-badge="utilizationPct">80%</span>
+                    
+                  </div>
+                </div>
+                <div class="control-field">
+                  <input id="control_utilizationPct_range" type="range" min="10" max="100" step="1" value="80" data-input="utilizationPct">
+                  <input type="number" min="10" max="100" step="1" value="80" data-input="utilizationPct" aria-label="목표 가동률">
+                </div>
+                <div class="base-hint">보고서 기본값: 80%</div>
+              </div>
+            
+                <div class="control-item">
+                  <div class="control-meta">
+                    <label for="control_totalPowerKw">총 수전용량</label>
+                    <div class="control-value-wrap">
+                      <span class="control-value" data-control-badge="totalPowerKw">2,500kW</span>
+                      
+                    </div>
+                  </div>
+                  <input id="control_totalPowerKw" type="number" min="1" max="30000" step="10" value="2500" data-input="totalPowerKw">
+                  <div class="base-hint">보고서 기본값: 2,500kW</div>
+                </div>
+              
+                <div class="control-item">
+                  <div class="control-meta">
+                    <label for="control_itPowerKw">IT 수전용량</label>
+                    <div class="control-value-wrap">
+                      <span class="control-value" data-control-badge="itPowerKw">2,000kW</span>
+                      <span class="control-value pue-readonly" data-pue-badge="">PUE 1.25</span>
+                    </div>
+                  </div>
+                  <input id="control_itPowerKw" type="number" min="1" max="20000" step="10" value="2000" data-input="itPowerKw">
+                  <div class="base-hint">보고서 기본값: 2,000kW</div>
+                </div>
+              
+              <div class="control-item">
+                <div class="control-meta">
+                  <label for="control_facilityCapexEok_range">시설 CAPEX</label>
+                  <div class="control-value-wrap">
+                    <span class="control-value" data-control-badge="facilityCapexEok">270억</span>
+                    
+                  </div>
+                </div>
+                <div class="control-field">
+                  <input id="control_facilityCapexEok_range" type="range" min="0" max="1000" step="10" value="270" data-input="facilityCapexEok">
+                  <input type="number" min="0" max="1000" step="10" value="270" data-input="facilityCapexEok" aria-label="시설 CAPEX">
+                </div>
+                <div class="base-hint">보고서 기본값: 270억</div>
+              </div>
+            
+              <div class="control-item">
+                <div class="control-meta">
+                  <label for="control_energyCostRate_range">전력량 요금단가</label>
+                  <div class="control-value-wrap">
+                    <span class="control-value" data-control-badge="energyCostRate">121.7원/kWh</span>
+                    
+                  </div>
+                </div>
+                <div class="control-field">
+                  <input id="control_energyCostRate_range" type="range" min="50" max="300" step="0.1" value="121.7" data-input="energyCostRate">
+                  <input type="number" min="50" max="300" step="0.1" value="121.7" data-input="energyCostRate" aria-label="전력량 요금단가">
+                </div>
+                <div class="base-hint">보고서 기본값: 121.7원/kWh</div>
+              </div>
+            
+              <div class="control-item">
+                <div class="control-meta">
+                  <label for="control_basicChargeKwMonth_range">기본요금 단가</label>
+                  <div class="control-value-wrap">
+                    <span class="control-value" data-control-badge="basicChargeKwMonth">9,810원/kW·월</span>
+                    
+                  </div>
+                </div>
+                <div class="control-field">
+                  <input id="control_basicChargeKwMonth_range" type="range" min="0" max="30000" step="100" value="9810" data-input="basicChargeKwMonth">
+                  <input type="number" min="0" max="30000" step="100" value="9810" data-input="basicChargeKwMonth" aria-label="기본요금 단가">
+                </div>
+                <div class="base-hint">보고서 기본값: 9,810원/kW·월</div>
+              </div>
+            
+        </section>
+      
+        <section class="control-group" data-views="gpu,compare" data-scope="GPU 모델" style="display: block;">
+          <h3>GPUaaS 상세 설정</h3>
+          
+              <div class="control-item">
+                <div class="control-meta">
+                  <label for="control_fxKrwUsd_range">환율</label>
+                  <div class="control-value-wrap">
+                    <span class="control-value" data-control-badge="fxKrwUsd">1,500원/USD</span>
+                    
+                  </div>
+                </div>
+                <div class="control-field">
+                  <input id="control_fxKrwUsd_range" type="range" min="1000" max="1800" step="10" value="1500" data-input="fxKrwUsd">
+                  <input type="number" min="1000" max="1800" step="10" value="1500" data-input="fxKrwUsd" aria-label="환율">
+                </div>
+                <div class="base-hint">보고서 기본값: 1,500원/USD</div>
+              </div>
+            
+                <div class="control-item">
+                  <div class="control-meta">
+                    <label for="control_depY1">1년차 감가상각률</label>
+                    <div class="control-value-wrap">
+                      <span class="control-value" data-control-badge="depY1">33%</span>
+                      
+                    </div>
+                  </div>
+                  <input id="control_depY1" type="number" min="0" max="100" step="1" value="33" data-input="depY1">
+                  <div class="base-hint">보고서 기본값: 33%</div>
+                </div>
+              
+                <div class="control-item">
+                  <div class="control-meta">
+                    <label for="control_depY2">2년차 감가상각률</label>
+                    <div class="control-value-wrap">
+                      <span class="control-value" data-control-badge="depY2">66%</span>
+                      
+                    </div>
+                  </div>
+                  <input id="control_depY2" type="number" min="0" max="100" step="1" value="66" data-input="depY2">
+                  <div class="base-hint">보고서 기본값: 66%</div>
+                </div>
+              
+                <div class="control-item">
+                  <div class="control-meta">
+                    <label for="control_depY3">3년차 감가상각률</label>
+                    <div class="control-value-wrap">
+                      <span class="control-value" data-control-badge="depY3">99%</span>
+                      
+                    </div>
+                  </div>
+                  <input id="control_depY3" type="number" min="0" max="100" step="1" value="99" data-input="depY3">
+                  <div class="base-hint">보고서 기본값: 99%</div>
+                </div>
+              
+        </section>
+      
+        <section class="control-group" data-views="colo" data-scope="상면 모델" style="display: none;">
+          <h3>상면임대(Colocation) 설정</h3>
+          
+              <div class="control-item">
+                <div class="control-meta">
+                  <label for="control_colocationFeeKwMonth_range">상면 요율</label>
+                  <div class="control-value-wrap">
+                    <span class="control-value" data-control-badge="colocationFeeKwMonth">130,000원/kW·월</span>
+                    
+                  </div>
+                </div>
+                <div class="control-field">
+                  <input id="control_colocationFeeKwMonth_range" type="range" min="50000" max="300000" step="5000" value="130000" data-input="colocationFeeKwMonth">
+                  <input type="number" min="50000" max="300000" step="5000" value="130000" data-input="colocationFeeKwMonth" aria-label="상면 요율">
+                </div>
+                <div class="base-hint">보고서 기본값: 130,000원/kW·월</div>
+              </div>
+            
+              <div class="control-item">
+                <div class="control-meta">
+                  <label for="control_electricSaleRate_range">전기 판매단가</label>
+                  <div class="control-value-wrap">
+                    <span class="control-value" data-control-badge="electricSaleRate">170.1원/kWh</span>
+                    
+                  </div>
+                </div>
+                <div class="control-field">
+                  <input id="control_electricSaleRate_range" type="range" min="80" max="300" step="0.1" value="170.1" data-input="electricSaleRate">
+                  <input type="number" min="80" max="300" step="0.1" value="170.1" data-input="electricSaleRate" aria-label="전기 판매단가">
+                </div>
+                <div class="base-hint">보고서 기본값: 170.1원/kWh</div>
+              </div>
+            
+        </section>
+      </div>
       </aside>
 
       <main class="results-area">
-        <section class="summary-grid" id="summaryCards" aria-label="매출 요약"></section>
-        <div id="mainContent"></div>
+        <section class="summary-grid" id="summaryCards" aria-label="매출 요약">
+        <article class="summary-card">
+          <span class="label">연간 매출</span>
+          <div class="value text-primary">2,523억</div>
+          <div class="hint">보고서 기본값 대비 +0억</div>
+        </article>
+        <article class="summary-card">
+          <span class="label">3년 누적 매출</span>
+          <div class="value text-primary">7,569억</div>
+          <div class="hint">Vera Rubin 10대 · 총 36,000 PFLOPS</div>
+        </article>
+        <article class="summary-card">
+          <span class="label">3년 누적 지출</span>
+          <div class="value">3,826억</div>
+          <div class="hint">IT CAPEX 1,170억 + 시설 270억</div>
+        </article>
+        <article class="summary-card">
+          <span class="label">3년 누적 손익</span>
+          <div class="value text-success">3,742억</div>
+          <div class="hint">BEP 1년차 · 누적 매출 대비 49.4% </div>
+        </article>
+      </section>
+        <div id="mainContent">
+          
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>랙 시스템 선택값</h2>
+              <p>보고서의 GB200·GB300·Vera Rubin 비교표 값을 기준으로 기본 전력·구매가·성능을 넣었습니다. 카드를 누르면 해당 랙으로 IT 수전용량 기준 내 최대 수량이 자동 배치됩니다.</p>
+            </div>
+            <button type="button" class="dark-pill" data-reset-selected="">선택 랙 기준값 재적용</button>
+          </div>
+          <div class="rack-card-grid">
+            
+                <button type="button" class="rack-select-card " data-select-rack="gb200" style="--rack-color:var(--gb200-color)">
+                  <span class="rack-kicker">NVL72 · 최대 16대</span>
+                  <strong>GB200 NVL72</strong>
+                  <span class="rack-sub">36 Grace CPU + 72 Blackwell GPU</span>
+                  <div class="mini-specs">
+                    <span>랙당 전력<b>120kW</b></span>
+                    <span>랙당 구매가<b>$3,000,000</b></span>
+                    <span>기본 단가<b>20,000원/hr</b></span>
+                    <span>FP4 성능<b>1,440 PFLOPS</b></span>
+                  </div>
+                </button>
+              
+                <button type="button" class="rack-select-card " data-select-rack="gb300" style="--rack-color:var(--gb300-color)">
+                  <span class="rack-kicker">NVL72 · 최대 14대</span>
+                  <strong>GB300 NVL72</strong>
+                  <span class="rack-sub">36 Grace CPU + 72 Blackwell Ultra GPU</span>
+                  <div class="mini-specs">
+                    <span>랙당 전력<b>140kW</b></span>
+                    <span>랙당 구매가<b>$4,000,000</b></span>
+                    <span>기본 단가<b>31,500원/hr</b></span>
+                    <span>FP4 성능<b>2,160 PFLOPS</b></span>
+                  </div>
+                </button>
+              
+                <button type="button" class="rack-select-card active" data-select-rack="veraRubin" style="--rack-color:var(--vr-color)">
+                  <span class="rack-kicker">NVL72 · 최대 10대</span>
+                  <strong>Vera Rubin NVL72</strong>
+                  <span class="rack-sub">36 Vera CPU + 72 Rubin GPU</span>
+                  <div class="mini-specs">
+                    <span>랙당 전력<b>190kW</b></span>
+                    <span>랙당 구매가<b>$7,800,000</b></span>
+                    <span>기본 단가<b>50,000원/hr</b></span>
+                    <span>FP4 성능<b>3,600 PFLOPS</b></span>
+                  </div>
+                </button>
+              
+          </div>
+        </section>
+      
+          
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>랙 구성 직접 조정</h2>
+              <p>랙 수량, 랙당 구매가, 랙당 전력, GPU 시간당 임대단가를 직접 바꿀 수 있습니다. 수량은 IT 수전용량 기준을 넘지 않도록 자동 보정됩니다.</p>
+            </div>
+          </div>
+          <div class="usage-strip">
+            <span>GPU 랙 전력 사용률</span>
+            <div class="meter"><span style="width:95%"></span></div>
+            <strong>95% (1,900kW / 2,000kW)</strong>
+          </div>
+          <div class="rack-adjust-grid">
+            
+                <article class="rack-adjust-card" data-rack-card="gb200" style="--rack-color:var(--gb200-color)">
+                  <div class="rack-adjust-title">
+                    <strong>GB200</strong>
+                    <span class="count-chip">0대</span>
+                  </div>
+                  <div class="rack-count-control">
+                    <input type="range" min="0" max="16" step="1" value="0" data-rack-count="gb200">
+                    <input type="number" min="0" max="16" step="1" value="0" data-rack-count="gb200" aria-label="GB200 랙 수량">
+                  </div>
+                  <div class="spec-grid">
+                    <div class="spec-input">
+                      <label>랙당 구매가(USD)</label>
+                      <input type="number" min="0" step="1000" value="3000000" data-rack-key="gb200" data-rack-prop="rackPriceUsd">
+                      <div class="krw-hint">약 45억원</div>
+                    </div>
+                    <div class="spec-input">
+                      <label>랙당 전력(kW)</label>
+                      <input type="number" min="1" step="1" value="120" data-rack-key="gb200" data-rack-prop="rackPowerKw">
+                    </div>
+                    <div class="spec-input">
+                      <label>GPU 시간당 임대단가(원/hr)</label>
+                      <input type="number" min="0" step="500" value="20000" data-rack-key="gb200" data-rack-prop="gpuHourlyRate">
+                    </div>
+                  </div>
+                </article>
+              
+                <article class="rack-adjust-card" data-rack-card="gb300" style="--rack-color:var(--gb300-color)">
+                  <div class="rack-adjust-title">
+                    <strong>GB300</strong>
+                    <span class="count-chip">0대</span>
+                  </div>
+                  <div class="rack-count-control">
+                    <input type="range" min="0" max="14" step="1" value="0" data-rack-count="gb300">
+                    <input type="number" min="0" max="14" step="1" value="0" data-rack-count="gb300" aria-label="GB300 랙 수량">
+                  </div>
+                  <div class="spec-grid">
+                    <div class="spec-input">
+                      <label>랙당 구매가(USD)</label>
+                      <input type="number" min="0" step="1000" value="4000000" data-rack-key="gb300" data-rack-prop="rackPriceUsd">
+                      <div class="krw-hint">약 60억원</div>
+                    </div>
+                    <div class="spec-input">
+                      <label>랙당 전력(kW)</label>
+                      <input type="number" min="1" step="1" value="140" data-rack-key="gb300" data-rack-prop="rackPowerKw">
+                    </div>
+                    <div class="spec-input">
+                      <label>GPU 시간당 임대단가(원/hr)</label>
+                      <input type="number" min="0" step="500" value="31500" data-rack-key="gb300" data-rack-prop="gpuHourlyRate">
+                    </div>
+                  </div>
+                </article>
+              
+                <article class="rack-adjust-card" data-rack-card="veraRubin" style="--rack-color:var(--vr-color)">
+                  <div class="rack-adjust-title">
+                    <strong>Vera Rubin</strong>
+                    <span class="count-chip">10대</span>
+                  </div>
+                  <div class="rack-count-control">
+                    <input type="range" min="0" max="10" step="1" value="10" data-rack-count="veraRubin">
+                    <input type="number" min="0" max="10" step="1" value="10" data-rack-count="veraRubin" aria-label="Vera Rubin 랙 수량">
+                  </div>
+                  <div class="spec-grid">
+                    <div class="spec-input">
+                      <label>랙당 구매가(USD)</label>
+                      <input type="number" min="0" step="1000" value="7800000" data-rack-key="veraRubin" data-rack-prop="rackPriceUsd">
+                      <div class="krw-hint">약 117억원</div>
+                    </div>
+                    <div class="spec-input">
+                      <label>랙당 전력(kW)</label>
+                      <input type="number" min="1" step="1" value="190" data-rack-key="veraRubin" data-rack-prop="rackPowerKw">
+                    </div>
+                    <div class="spec-input">
+                      <label>GPU 시간당 임대단가(원/hr)</label>
+                      <input type="number" min="0" step="500" value="50000" data-rack-key="veraRubin" data-rack-prop="gpuHourlyRate">
+                    </div>
+                  </div>
+                </article>
+              
+          </div>
+        </section>
+      
+          
+        <section class="panel chart-panel">
+          <div class="panel-head">
+            <div>
+              <h2>3년 누적 추이</h2>
+              <p>누적 매출, 누적 지출, 누적 손익을 같은 축에서 비교합니다.</p>
+            </div>
+          </div>
+          <div class="chart-wrap" id="chartWrap">
+        <svg class="chart" viewBox="0 0 860 300" role="img" aria-label="3년 누적 추이 차트">
+          <line class="gridline" x1="76" y1="262" x2="836" y2="262"></line><text class="tick" x="64" y="266" text-anchor="end">-908.2억</text><line class="gridline" x1="76" y1="202.49999999999997" x2="836" y2="202.49999999999997"></line><text class="tick" x="64" y="206.49999999999997" text-anchor="end">1,438억</text><line class="gridline" x1="76" y1="143" x2="836" y2="143"></line><text class="tick" x="64" y="147" text-anchor="end">3,784억</text><line class="gridline" x1="76" y1="83.49999999999997" x2="836" y2="83.49999999999997"></line><text class="tick" x="64" y="87.49999999999997" text-anchor="end">6,131억</text><line class="gridline" x1="76" y1="24" x2="836" y2="24"></line><text class="tick" x="64" y="28" text-anchor="end">8,477억</text><line class="gridline zero" x1="76" y1="238.96774193548384" x2="836" y2="238.96774193548384"></line>
+          <line class="axis" x1="76" y1="262" x2="836" y2="262"></line>
+          <line class="axis" x1="76" y1="24" x2="76" y2="262"></line>
+          <polyline class="line revenue" points="76,174.98924731182794 456,111.01075268817203 836,47.032258064516114"></polyline><circle class="dot revenue" cx="76" cy="174.98924731182794" data-series="revenue" data-index="0"></circle><circle class="dot revenue" cx="456" cy="111.01075268817203" data-series="revenue" data-index="1"></circle><circle class="dot revenue" cx="836" cy="47.032258064516114" data-series="revenue" data-index="2"></circle><polyline class="line expense" points="76,192.07080272059784 456,171.90003973441512 836,141.93804736982617"></polyline><circle class="dot expense" cx="76" cy="192.07080272059784" data-series="expense" data-index="0"></circle><circle class="dot expense" cx="456" cy="171.90003973441512" data-series="expense" data-index="1"></circle><circle class="dot expense" cx="836" cy="141.93804736982617" data-series="expense" data-index="2"></circle><polyline class="line profit" points="76,221.88618652671394 456,178.07845488924076 836,144.06195263017378"></polyline><circle class="dot profit" cx="76" cy="221.88618652671394" data-series="profit" data-index="0"></circle><circle class="dot profit" cx="456" cy="178.07845488924076" data-series="profit" data-index="1"></circle><circle class="dot profit" cx="836" cy="144.06195263017378" data-series="profit" data-index="2"></circle>
+          
+        <line class="hover-line" data-hover-index="0" x1="76" y1="24" x2="76" y2="262"></line>
+      
+        <line class="hover-line" data-hover-index="1" x1="456" y1="24" x2="456" y2="262"></line>
+      
+        <line class="hover-line" data-hover-index="2" x1="836" y1="24" x2="836" y2="262"></line>
+      
+          <rect class="hover-zone" data-hover-index="0" x="76" y="24" width="253.33333333333334" height="238"></rect><rect class="hover-zone" data-hover-index="1" x="329.3333333333333" y="24" width="253.33333333333334" height="238"></rect><rect class="hover-zone" data-hover-index="2" x="709.3333333333334" y="24" width="253.33333333333334" height="238"></rect>
+          
+        <text class="tick" x="76" y="292" text-anchor="middle">1년차</text>
+      
+        <text class="tick" x="456" y="292" text-anchor="middle">2년차</text>
+      
+        <text class="tick" x="836" y="292" text-anchor="middle">3년차</text>
+      
+        </svg>
+        <div class="chart-tooltip" id="chartTooltip"></div>
+      </div>
+          <div class="legend" id="legend">
+        <div class="legend-item"><span class="swatch" style="background:var(--primary)"></span>누적 매출</div>
+      
+        <div class="legend-item"><span class="swatch" style="background:#f59e0b"></span>누적 지출</div>
+      
+        <div class="legend-item"><span class="swatch" style="background:var(--success)"></span>누적 손익</div>
+      </div>
+        </section>
+      
+          
+        <section class="panel formula-panel">
+          <div class="panel-head">
+            <div>
+              <h2>산식 및 기준값</h2>
+              <p>입력값과 랙 기본 스펙이 어떤 산식으로 매출·지출에 반영되는지 확인할 수 있습니다. GPU 임대단가와 랙 스펙은 직접 조정 가능합니다.</p>
+            </div>
+          </div>
+
+          <div class="basis-alert">
+            <p><strong>현재 기준: 선택 랙은 Vera Rubin NVL72이며, Vera Rubin 10대 구성입니다. 랙당 전력 190kW, 랙당 구매가 $7,800,000, 기본 임대단가 50,000원/hr를 반영해 연매출 2,523억, IT 장비 CAPEX 1,170억, 전기료 23.2억로 계산합니다.</strong></p>
+            <div class="usage-strip" style="margin:0; background:rgba(255,255,255,0.58); border-color:rgba(245,158,11,0.22)">
+              <span>전력 배치 현황</span>
+              <div class="meter"><span style="width:95%"></span></div>
+              <strong>GPU 랙 전력 사용률: 95% (Vera Rubin 10대 / IT 수전용량 2,000kW)</strong>
+            </div>
+            <div class="basis-chips">
+              <span>목표 가동률 80%</span>
+              <span>총 수전용량 2,500kW</span>
+              <span>IT 수전용량 2,000kW</span>
+              <span>PUE 1.25</span>
+              <span>시설 CAPEX 270억</span>
+              <span>전력량 단가 121.7원/kWh</span>
+              <span>기본요금 9,810원/kW·월</span>
+              <span>환율 1,500원/USD</span><span>감가상각 33/66/99%</span>
+            </div>
+          </div>
+
+          <div class="formula-grid">
+            <article class="formula-card">
+              <h3>GPUaaS 연매출</h3>
+              <p><code>Σ(랙 수 × 랙당 GPU 수 × 8,760시간 × 가동률 × GPU 시간당 단가)</code></p>
+            </article>
+            <article class="formula-card">
+              <h3>상면임대 연매출</h3>
+              <p><code>IT 수전용량(kW) × 상면요율 × 12개월 + 총 수전용량(kW) × 8,760시간 × 가동률 × 전기 판매단가</code></p>
+            </article>
+            <article class="formula-card">
+              <h3>IT 장비 CAPEX</h3>
+              <p><code>Σ(랙 수 × 선택 랙당 구매가(USD) × 환율)</code></p>
+            </article>
+            <article class="formula-card">
+              <h3>전기료</h3>
+              <p><code>총 수전용량(kW) × 기본요금 × 12 + 사용 IT 전력(kW) × PUE × 8,760시간 × 가동률 × 전력량 단가</code></p>
+            </article>
+          </div>
+        </section>
+      
+          
+        <section class="panel table-panel">
+          <div class="panel-head">
+            <div>
+              <h2>연차별 수익구조</h2>
+              <p>연도별 매출·지출·손익과 누적 손익을 표로 확인합니다.</p>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>연차</th>
+                  <th>연매출</th>
+                  <th>연지출</th>
+                  <th>연손익</th>
+                  <th>누적매출</th>
+                  <th>누적지출</th>
+                  <th>누적손익</th>
+                  <th>연간 손익률</th>
+                </tr>
+              </thead>
+              <tbody>
+          <tr>
+            <td><strong>1년차</strong></td>
+            <td>2,523억</td>
+            <td>1,849억</td>
+            <td class="text-success">673.6억</td>
+            <td>2,523억</td>
+            <td>1,849억</td>
+            <td class="text-success"><strong>673.6억</strong></td>
+            <td>26.7%</td>
+          </tr>
+        
+          <tr>
+            <td><strong>2년차</strong></td>
+            <td>2,523억</td>
+            <td>795.4억</td>
+            <td class="text-success">1,727억</td>
+            <td>5,046억</td>
+            <td>2,645억</td>
+            <td class="text-success"><strong>2,401억</strong></td>
+            <td>68.5%</td>
+          </tr>
+        
+          <tr>
+            <td><strong>3년차</strong></td>
+            <td>2,523억</td>
+            <td>1,181억</td>
+            <td class="text-success">1,341억</td>
+            <td>7,569억</td>
+            <td>3,826억</td>
+            <td class="text-success"><strong>3,742억</strong></td>
+            <td>53.2%</td>
+          </tr>
+        </tbody>
+            </table>
+          </div>
+        </section>
+      
+        </div>
       </main>
     </div>
   </div>
@@ -1729,8 +2281,18 @@
 
       const paths = series.map(item => {
         const points = item.data.map((value, index) => `${x(index)},${y(value)}`).join(' ');
-        const dots = item.data.map((value, index) => `<circle class="dot ${item.cls}" cx="${x(index)}" cy="${y(value)}"></circle>`).join('');
+        const dots = item.data.map((value, index) => `<circle class="dot ${item.cls}" cx="${x(index)}" cy="${y(value)}" data-series="${item.cls}" data-index="${index}"></circle>`).join('');
         return `<polyline class="line ${item.cls}" points="${points}"></polyline>${dots}`;
+      }).join('');
+
+      const hoverLines = Array.from({ length: YEARS }, (_, index) => `
+        <line class="hover-line" data-hover-index="${index}" x1="${x(index)}" y1="${pad.top}" x2="${x(index)}" y2="${height - pad.bottom}"></line>
+      `).join('');
+
+      const zoneWidth = (width - pad.left - pad.right) / YEARS;
+      const hoverZones = Array.from({ length: YEARS }, (_, index) => {
+        const zoneX = Math.max(pad.left, x(index) - zoneWidth / 2);
+        return `<rect class="hover-zone" data-hover-index="${index}" x="${zoneX}" y="${pad.top}" width="${zoneWidth}" height="${height - pad.top - pad.bottom}"></rect>`;
       }).join('');
 
       wrap.innerHTML = `
@@ -1739,12 +2301,68 @@
           <line class="axis" x1="${pad.left}" y1="${height - pad.bottom}" x2="${width - pad.right}" y2="${height - pad.bottom}"></line>
           <line class="axis" x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${height - pad.bottom}"></line>
           ${paths}
+          ${hoverLines}
+          ${hoverZones}
           ${xTicks}
         </svg>
+        <div class="chart-tooltip" id="chartTooltip"></div>
       `;
       legend.innerHTML = series.map(item => `
         <div class="legend-item"><span class="swatch" style="background:${item.color}"></span>${item.name}</div>
       `).join('');
+
+      attachChartHover(wrap, data, series);
+    }
+
+    function attachChartHover(wrap, data, series) {
+      const tooltip = wrap.querySelector('#chartTooltip');
+      const zones = wrap.querySelectorAll('.hover-zone');
+      if (!tooltip || !zones.length) return;
+
+      const showIndex = index => {
+        wrap.querySelectorAll('.hover-line').forEach(line => {
+          line.style.opacity = Number(line.dataset.hoverIndex) === index ? '1' : '0';
+        });
+        wrap.querySelectorAll('.dot').forEach(dot => {
+          dot.classList.toggle('hover-active', Number(dot.dataset.index) === index);
+        });
+
+        const annualProfit = data.annualRevenue[index] - data.annualExpense[index];
+        tooltip.innerHTML = `
+          <div class="tt-title">${index + 1}년차</div>
+          <div class="tt-row"><span class="tt-dot" style="background:${series[0].color}"></span>누적매출<b>${eok(data.cumRevenue[index])}</b></div>
+          <div class="tt-row"><span class="tt-dot" style="background:${series[1].color}"></span>누적지출<b>${eok(data.cumExpense[index])}</b></div>
+          <div class="tt-row"><span class="tt-dot" style="background:${series[2].color}"></span>누적손익<b>${eok(data.cumProfit[index])}</b></div>
+          <div class="tt-row" style="opacity:0.7"><span class="tt-dot" style="background:transparent"></span>연손익<b>${eok(annualProfit)}</b></div>
+        `;
+        tooltip.classList.add('visible');
+      };
+
+      const positionTooltip = event => {
+        const wrapRect = wrap.getBoundingClientRect();
+        const tooltipRect = tooltip.getBoundingClientRect();
+        let left = event.clientX - wrapRect.left + 16;
+        let top = event.clientY - wrapRect.top - tooltipRect.height - 14;
+        if (left + tooltipRect.width > wrapRect.width) left = event.clientX - wrapRect.left - tooltipRect.width - 16;
+        if (top < 0) top = event.clientY - wrapRect.top + 18;
+        tooltip.style.transform = `translate(${Math.max(0, left)}px, ${Math.max(0, top)}px)`;
+      };
+
+      const hideTooltip = () => {
+        tooltip.classList.remove('visible');
+        wrap.querySelectorAll('.hover-line').forEach(line => { line.style.opacity = '0'; });
+        wrap.querySelectorAll('.dot').forEach(dot => dot.classList.remove('hover-active'));
+      };
+
+      zones.forEach(zone => {
+        const index = Number(zone.dataset.hoverIndex);
+        zone.addEventListener('mouseenter', event => { showIndex(index); positionTooltip(event); });
+        zone.addEventListener('mousemove', positionTooltip);
+        zone.addEventListener('mouseleave', hideTooltip);
+        zone.addEventListener('touchstart', event => { showIndex(index); positionTooltip(event.touches[0]); }, { passive: true });
+      });
+
+      wrap.addEventListener('mouseleave', hideTooltip);
     }
 
     function renderMainContent(data) {
@@ -2072,5 +2690,6 @@
     buildControls();
     render();
   </script>
-</body>
-</html>
+
+
+</body></html>
