@@ -816,6 +816,9 @@
     /* 수정1: 시설비 세부 내역표 */
     .facility-table td, .facility-table th { font-weight: 800; }
     .facility-table .fac-num { text-align: right; }
+    /* 수정: 표 1행(헤더) 전체 왼쪽 정렬 */
+    .facility-table thead th,
+    .facility-table thead th.fac-num { text-align: left; }
     .facility-table td.fac-active,
     .facility-table th.fac-active {
       background: var(--primary-soft);
@@ -832,7 +835,8 @@
       max-width: 420px;
       line-height: 1.5;
     }
-    .facility-table td.fac-cat { vertical-align: top; }
+    /* 수정: 2~6행 1열(상세내역 카테고리) 왼쪽·세로 가운데 정렬 */
+    .facility-table td.fac-cat { vertical-align: middle; text-align: left; }
     .facility-table .fac-note-head {
       font-size: 11px;
       font-weight: 900;
@@ -2987,8 +2991,8 @@
           utilY2: 80,
           utilY3: 70,
           totalPowerKw: 2700,
-          facilityCapexEok: facilitySumEok('newbuild'),
-          constructionType: 'newbuild',
+          facilityCapexEok: facilitySumEok('remodel'),
+          constructionType: 'remodel',
           energyCostRate: 140,
           basicChargeKwMonth: 11000,
           fxKrwUsd: 1550,
@@ -3292,10 +3296,14 @@
     fillSelectedRack(state, rackTypes, state.selectedRack);
     buildControls();
     render();
-  </script><div class="util-tip" id="utilTip" style="left: 606px; top: 191px;">
+  </script><div class="util-tip" id="utilTip" style="left: 603px; top: 168px;">
+        <div class="tt-title">3년 차 (80%)</div>
+        <div class="tt-desc">차세대 칩셋 진입에 따른 보수적 하락 시작</div>
+      </div><div class="util-tip" id="utilTip" style="left: 606px; top: 191px;">
         <div class="tt-title">3년 차 (80%)</div>
         <div class="tt-desc">차세대 칩셋 진입에 따른 보수적 하락 시작</div>
       </div>
+
 
 
 
