@@ -1120,8 +1120,8 @@
     </header>
 
     <nav class="view-tabs" aria-label="Model tabs">
-      <button type="button" class="view-tab active" data-view="gpu">서버/GPU 임대</button>
-      <button type="button" class="view-tab" data-view="colo">상면임대</button>
+      <button type="button" class="view-tab" data-view="gpu">서버/GPU 임대</button>
+      <button type="button" class="view-tab active" data-view="colo">상면임대</button>
       <button type="button" class="view-tab" data-view="compare">모델 비교</button>
     </nav>
 
@@ -1253,7 +1253,7 @@
             
         </section>
       
-        <section class="control-group" data-views="gpu,compare" data-scope="GPU 모델" style="display: block;">
+        <section class="control-group" data-views="gpu,compare" data-scope="GPU 모델" style="display: none;">
           <h3>GPUaaS 상세 설정</h3>
           
               <div class="control-item">
@@ -1305,7 +1305,7 @@
               
         </section>
       
-        <section class="control-group" data-views="colo" data-scope="상면 모델" style="display: none;">
+        <section class="control-group" data-views="colo" data-scope="상면 모델" style="display: block;">
           <h3>상면임대(Colocation) 설정</h3>
           
               <div class="control-item">
@@ -1344,170 +1344,26 @@
         <section class="summary-grid" id="summaryCards" aria-label="Revenue summary">
         <article class="summary-card">
           <span class="label">연간 매출</span>
-          <div class="value text-primary">1,892억</div>
-          <div class="hint">보고서 기본값 대비 +0억</div>
+          <div class="value text-primary">49.3억</div>
+          <div class="hint">상면 31.2억 + 전기판매 23.2억</div>
         </article>
         <article class="summary-card">
           <span class="label">3년 누적 매출</span>
-          <div class="value text-primary">7,253억</div>
-          <div class="hint">Vera Rubin 10대 · 총 36,000 PFLOPS</div>
+          <div class="value text-primary">163.1억</div>
+          <div class="hint">총 수전용량 2,500kW · IT 수전용량 2,000kW · PUE 1.25</div>
         </article>
         <article class="summary-card">
           <span class="label">3년 누적 지출</span>
-          <div class="value">3,824억</div>
-          <div class="hint">IT CAPEX 1,170억 + 시설 270억</div>
+          <div class="value">340.1억</div>
+          <div class="hint">시설 CAPEX 270억 + 전기료 23.4억</div>
         </article>
         <article class="summary-card">
           <span class="label">3년 누적 손익</span>
-          <div class="value text-success">3,430억</div>
-          <div class="hint">BEP 1년차 · 누적 매출 대비 47.3%</div>
+          <div class="value text-danger">-177억</div>
+          <div class="hint">3년 내 BEP 미달 · 누적 매출 대비 -108.5%</div>
         </article>
       </section>
         <div id="mainContent">
-        <section class="panel">
-          <div class="panel-head">
-            <div>
-              <h2>랙 시스템 선택값</h2>
-              <p>보고서의 GB200·GB300·Vera Rubin 비교표 값을 기준으로 기본 전력·구매가·성능을 넣었습니다. 카드를 누르면 해당 랙으로 IT 수전용량 기준 내 최대 수량이 자동 배치됩니다.</p>
-            </div>
-            <button type="button" class="dark-pill" data-reset-selected="">선택 랙 기준값 재적용</button>
-          </div>
-          <div class="rack-card-grid">
-            
-                <button type="button" class="rack-select-card " data-select-rack="gb200" style="--rack-color:var(--gb200-color)">
-                  <span class="rack-kicker">NVL72 · 최대 16대</span>
-                  <strong>GB200 NVL72</strong>
-                  <span class="rack-sub">36 Grace CPU + 72 Blackwell GPU</span>
-                  <div class="mini-specs">
-                    <span>랙당 전력<b>120kW</b></span>
-                    <span>랙당 구매가<b>$3,000,000</b></span>
-                    <span>기본 단가<b>20,000원/hr</b></span>
-                    <span>FP4 성능<b>1,440 PFLOPS</b></span>
-                  </div>
-                </button>
-              
-                <button type="button" class="rack-select-card " data-select-rack="gb300" style="--rack-color:var(--gb300-color)">
-                  <span class="rack-kicker">NVL72 · 최대 14대</span>
-                  <strong>GB300 NVL72</strong>
-                  <span class="rack-sub">36 Grace CPU + 72 Blackwell Ultra GPU</span>
-                  <div class="mini-specs">
-                    <span>랙당 전력<b>140kW</b></span>
-                    <span>랙당 구매가<b>$4,000,000</b></span>
-                    <span>기본 단가<b>31,500원/hr</b></span>
-                    <span>FP4 성능<b>2,160 PFLOPS</b></span>
-                  </div>
-                </button>
-              
-                <button type="button" class="rack-select-card active" data-select-rack="veraRubin" style="--rack-color:var(--vr-color)">
-                  <span class="rack-kicker">NVL72 · 최대 10대</span>
-                  <strong>Vera Rubin NVL72</strong>
-                  <span class="rack-sub">36 Vera CPU + 72 Rubin GPU</span>
-                  <div class="mini-specs">
-                    <span>랙당 전력<b>190kW</b></span>
-                    <span>랙당 구매가<b>$7,800,000</b></span>
-                    <span>기본 단가<b>50,000원/hr</b></span>
-                    <span>FP4 성능<b>3,600 PFLOPS</b></span>
-                  </div>
-                </button>
-              
-          </div>
-        </section>
-      
-        <section class="panel">
-          <div class="panel-head">
-            <div>
-              <h2>랙 구성 직접 조정</h2>
-              <p>랙 수량, 랙당 구매가, 랙당 전력, GPU 시간당 임대단가를 직접 바꿀 수 있습니다. 수량은 IT 수전용량 기준을 넘지 않도록 자동 보정됩니다.</p>
-            </div>
-          </div>
-          <div class="usage-strip">
-            <span>GPU 랙 전력 사용률</span>
-            <div class="meter"><span style="width:95%"></span></div>
-            <strong>95% (1,900kW / 2,000kW)</strong>
-          </div>
-          <div class="rack-adjust-grid">
-            
-                <article class="rack-adjust-card" data-rack-card="gb200" style="--rack-color:var(--gb200-color)">
-                  <div class="rack-adjust-title">
-                    <strong>GB200</strong>
-                    <span class="count-chip">0대</span>
-                  </div>
-                  <div class="rack-count-control">
-                    <input type="range" min="0" max="16" step="1" value="0" data-rack-count="gb200">
-                    <input type="number" min="0" max="16" step="1" value="0" data-rack-count="gb200" aria-label="GB200 rack count">
-                  </div>
-                  <div class="spec-grid">
-                    <div class="spec-input">
-                      <label>랙당 구매가(USD)</label>
-                      <input type="number" min="0" step="1000" value="3000000" data-rack-key="gb200" data-rack-prop="rackPriceUsd">
-                      <div class="krw-hint">약 45억원</div>
-                    </div>
-                    <div class="spec-input">
-                      <label>랙당 전력(kW)</label>
-                      <input type="number" min="1" step="1" value="120" data-rack-key="gb200" data-rack-prop="rackPowerKw">
-                    </div>
-                    <div class="spec-input">
-                      <label>GPU 시간당 임대단가 (원/hr)</label>
-                      <input type="number" min="0" step="500" value="20000" data-rack-key="gb200" data-rack-prop="gpuHourlyRate">
-                    </div>
-                  </div>
-                </article>
-              
-                <article class="rack-adjust-card" data-rack-card="gb300" style="--rack-color:var(--gb300-color)">
-                  <div class="rack-adjust-title">
-                    <strong>GB300</strong>
-                    <span class="count-chip">0대</span>
-                  </div>
-                  <div class="rack-count-control">
-                    <input type="range" min="0" max="14" step="1" value="0" data-rack-count="gb300">
-                    <input type="number" min="0" max="14" step="1" value="0" data-rack-count="gb300" aria-label="GB300 rack count">
-                  </div>
-                  <div class="spec-grid">
-                    <div class="spec-input">
-                      <label>랙당 구매가(USD)</label>
-                      <input type="number" min="0" step="1000" value="4000000" data-rack-key="gb300" data-rack-prop="rackPriceUsd">
-                      <div class="krw-hint">약 60억원</div>
-                    </div>
-                    <div class="spec-input">
-                      <label>랙당 전력(kW)</label>
-                      <input type="number" min="1" step="1" value="140" data-rack-key="gb300" data-rack-prop="rackPowerKw">
-                    </div>
-                    <div class="spec-input">
-                      <label>GPU 시간당 임대단가 (원/hr)</label>
-                      <input type="number" min="0" step="500" value="31500" data-rack-key="gb300" data-rack-prop="gpuHourlyRate">
-                    </div>
-                  </div>
-                </article>
-              
-                <article class="rack-adjust-card" data-rack-card="veraRubin" style="--rack-color:var(--vr-color)">
-                  <div class="rack-adjust-title">
-                    <strong>Vera Rubin</strong>
-                    <span class="count-chip">10대</span>
-                  </div>
-                  <div class="rack-count-control">
-                    <input type="range" min="0" max="10" step="1" value="10" data-rack-count="veraRubin">
-                    <input type="number" min="0" max="10" step="1" value="10" data-rack-count="veraRubin" aria-label="Vera Rubin rack count">
-                  </div>
-                  <div class="spec-grid">
-                    <div class="spec-input">
-                      <label>랙당 구매가(USD)</label>
-                      <input type="number" min="0" step="1000" value="7800000" data-rack-key="veraRubin" data-rack-prop="rackPriceUsd">
-                      <div class="krw-hint">약 117억원</div>
-                    </div>
-                    <div class="spec-input">
-                      <label>랙당 전력(kW)</label>
-                      <input type="number" min="1" step="1" value="190" data-rack-key="veraRubin" data-rack-prop="rackPowerKw">
-                    </div>
-                    <div class="spec-input">
-                      <label>GPU 시간당 임대단가 (원/hr)</label>
-                      <input type="number" min="0" step="500" value="50000" data-rack-key="veraRubin" data-rack-prop="gpuHourlyRate">
-                    </div>
-                  </div>
-                </article>
-              
-          </div>
-        </section>
-      
         <section class="panel chart-panel">
           <div class="panel-head">
             <div>
@@ -1517,16 +1373,16 @@
           </div>
           <div class="chart-wrap" id="chartWrap">
         <svg class="chart" viewBox="0 0 860 300" role="img" aria-label="3년 누적 추이">
-          <line class="gridline" x1="88" y1="262" x2="836" y2="262"></line><text class="tick" x="76" y="266" text-anchor="end">-870.4억</text><line class="gridline" x1="88" y1="202.5" x2="836" y2="202.5"></line><text class="tick" x="76" y="206.5" text-anchor="end">1,378억</text><line class="gridline" x1="88" y1="143.00000000000003" x2="836" y2="143.00000000000003"></line><text class="tick" x="76" y="147.00000000000003" text-anchor="end">3,627억</text><line class="gridline" x1="88" y1="83.50000000000001" x2="836" y2="83.50000000000001"></line><text class="tick" x="76" y="87.50000000000001" text-anchor="end">5,875억</text><line class="gridline" x1="88" y1="24.000000000000025" x2="836" y2="24.000000000000025"></line><text class="tick" x="76" y="28.000000000000025" text-anchor="end">8,124억</text><line class="gridline zero" x1="88" y1="238.96774193548387" x2="836" y2="238.96774193548387"></line>
+          <line class="gridline" x1="88" y1="262" x2="836" y2="262"></line><text class="tick" x="76" y="266" text-anchor="end">-309.2억</text><line class="gridline" x1="88" y1="202.5" x2="836" y2="202.5"></line><text class="tick" x="76" y="206.5" text-anchor="end">-129.5억</text><line class="gridline" x1="88" y1="143" x2="836" y2="143"></line><text class="tick" x="76" y="147" text-anchor="end">50.3억</text><line class="gridline" x1="88" y1="83.50000000000001" x2="836" y2="83.50000000000001"></line><text class="tick" x="76" y="87.50000000000001" text-anchor="end">230억</text><line class="gridline" x1="88" y1="24" x2="836" y2="24"></line><text class="tick" x="76" y="28" text-anchor="end">409.7억</text><line class="gridline zero" x1="88" y1="159.6412776574292" x2="836" y2="159.6412776574292"></line>
           <line class="axis" x1="88" y1="262" x2="836" y2="262"></line>
           <line class="axis" x1="88" y1="24" x2="88" y2="262"></line>
-          <polyline class="line revenue" points="88,188.8976157082749 462,113.79242636746145 836,47.03225806451614"></polyline><circle class="dot revenue" cx="88" cy="188.8976157082749" data-series="revenue" data-index="0"></circle><circle class="dot revenue" cx="462" cy="113.79242636746145" data-series="revenue" data-index="1"></circle><circle class="dot revenue" cx="836" cy="47.03225806451614" data-series="revenue" data-index="2"></circle><polyline class="line expense" points="88,190.16580669777517 462,169.05105334936792 836,137.78636566457945"></polyline><circle class="dot expense" cx="88" cy="190.16580669777517" data-series="expense" data-index="0"></circle><circle class="dot expense" cx="462" cy="169.05105334936792" data-series="expense" data-index="1"></circle><circle class="dot expense" cx="836" cy="137.78636566457945" data-series="expense" data-index="2"></circle><polyline class="line profit" points="88,237.69955094598362 462,183.7091149535774 836,148.21363433542058"></polyline><circle class="dot profit" cx="88" cy="237.69955094598362" data-series="profit" data-index="0"></circle><circle class="dot profit" cx="462" cy="183.7091149535774" data-series="profit" data-index="1"></circle><circle class="dot profit" cx="836" cy="148.21363433542058" data-series="profit" data-index="2"></circle>
+          <polyline class="line revenue" points="88,143.30818477565742 462,123.97334824210803 836,105.63909292581785"></polyline><circle class="dot revenue" cx="88" cy="143.30818477565742" data-series="revenue" data-index="0"></circle><circle class="dot revenue" cx="462" cy="123.97334824210803" data-series="revenue" data-index="1"></circle><circle class="dot revenue" cx="836" cy="105.63909292581785" data-series="revenue" data-index="2"></circle><polyline class="line expense" points="88,63.98172049760274 462,55.06579096895638 836,47.03225806451613"></polyline><circle class="dot expense" cx="88" cy="63.98172049760274" data-series="expense" data-index="0"></circle><circle class="dot expense" cx="462" cy="55.06579096895638" data-series="expense" data-index="1"></circle><circle class="dot expense" cx="836" cy="47.03225806451613" data-series="expense" data-index="2"></circle><polyline class="line profit" points="88,238.96774193548387 462,228.54883493058088 836,218.24811251873092"></polyline><circle class="dot profit" cx="88" cy="238.96774193548387" data-series="profit" data-index="0"></circle><circle class="dot profit" cx="462" cy="228.54883493058088" data-series="profit" data-index="1"></circle><circle class="dot profit" cx="836" cy="218.24811251873092" data-series="profit" data-index="2"></circle>
           
-        <line class="hover-line" data-hover-index="0" x1="88" y1="24" x2="88" y2="262"></line>
+        <line class="hover-line" data-hover-index="0" x1="88" y1="24" x2="88" y2="262" style="opacity: 0;"></line>
       
-        <line class="hover-line" data-hover-index="1" x1="462" y1="24" x2="462" y2="262"></line>
+        <line class="hover-line" data-hover-index="1" x1="462" y1="24" x2="462" y2="262" style="opacity: 0;"></line>
       
-        <line class="hover-line" data-hover-index="2" x1="836" y1="24" x2="836" y2="262"></line>
+        <line class="hover-line" data-hover-index="2" x1="836" y1="24" x2="836" y2="262" style="opacity: 0;"></line>
       
           <rect class="hover-zone" data-hover-index="0" x="88" y="24" width="249.33333333333334" height="238"></rect><rect class="hover-zone" data-hover-index="1" x="337.3333333333333" y="24" width="249.33333333333334" height="238"></rect><rect class="hover-zone" data-hover-index="2" x="711.3333333333334" y="24" width="249.33333333333334" height="238"></rect>
           
@@ -1537,7 +1393,13 @@
         <text class="tick" x="836" y="292" text-anchor="middle">3년차</text>
       
         </svg>
-        <div class="chart-tooltip" id="chartTooltip"></div>
+        <div class="chart-tooltip" id="chartTooltip" style="transform: translate(168px, 69.8906px);">
+          <div class="tt-title">1년차</div>
+          <div class="tt-row"><span class="tt-dot" style="background:var(--primary)"></span>누적매출<b>49.3억</b></div>
+          <div class="tt-row"><span class="tt-dot" style="background:#f59e0b"></span>누적지출<b>288.9억</b></div>
+          <div class="tt-row"><span class="tt-dot" style="background:var(--success)"></span>누적손익<b>-239.6억</b></div>
+          <div class="tt-row" style="opacity:0.7"><span class="tt-dot" style="background:transparent"></span>연손익<b>-239.6억</b></div>
+        </div>
       </div>
           <div class="legend" id="legend"><div class="legend-item"><span class="swatch" style="background:var(--primary)"></span>누적 매출</div><div class="legend-item"><span class="swatch" style="background:#f59e0b"></span>누적 지출</div><div class="legend-item"><span class="swatch" style="background:var(--success)"></span>누적 손익</div></div>
         </section>
@@ -1551,11 +1413,11 @@
           </div>
 
           <div class="basis-alert">
-            <p><strong>현재 기준: 선택 랙은 Vera Rubin NVL72이며, Vera Rubin 10대 구성입니다. 랙당 전력 190kW, 랙당 구매가 $7,800,000, 기본 임대단가 50,000원/hr를 반영해 연매출 1,892억, IT 장비 CAPEX 1,170억, 전기료 22.4억로 계산합니다.</strong></p>
+            <p><strong>현재 기준: 상면임대 모델은 IT 수전용량 2,000kW, 상면요율 130,000원/kW·월, 전기 판매단가 138원/kWh를 반영해 연매출 49.3억, 전기료 23.4억로 계산합니다.</strong></p>
             <div class="usage-strip" style="margin:0; background:rgba(255,255,255,0.58); border-color:rgba(245,158,11,0.22)">
-              <span>전력 배치 현황</span>
-              <div class="meter"><span style="width:95%"></span></div>
-              <strong>GPU 랙 전력 사용률: 95% (Vera Rubin 10대 / IT 수전용량 2,000kW)</strong>
+              <span>상면 과금 현황</span>
+              <div class="meter"><span style="width:100%"></span></div>
+              <strong>상면 과금 기준: IT 수전용량 2,000kW, 총 수전용량 2,500kW(PUE 1.25)</strong>
             </div>
             <div class="basis-chips">
               <span>연차 가동률 60·90·80%</span>
@@ -1565,7 +1427,7 @@
               <span>시설 CAPEX 270억</span>
               <span>전력량 단가 121.7원/kWh</span>
               <span>전기기본요금 9,810원/kW·월</span>
-              <span>환율 1,500원/USD</span><span>감가상각 33/66/99%</span>
+              <span>상면요율 130,000원/kW·월</span><span>전기판매 138원/kWh</span>
             </div>
           </div>
 
@@ -1711,35 +1573,35 @@
               <tbody>
           <tr>
             <td><strong>1년차</strong></td>
-            <td>1,892억</td>
-            <td>1,844억</td>
-            <td class="text-success">47.9억</td>
-            <td>1,892억</td>
-            <td>1,844억</td>
-            <td class="text-success"><strong>47.9억</strong></td>
-            <td>2.5%</td>
+            <td>49.3억</td>
+            <td>288.9억</td>
+            <td class="text-danger">-239.6억</td>
+            <td>49.3억</td>
+            <td>288.9억</td>
+            <td class="text-danger"><strong>-239.6억</strong></td>
+            <td>-485.7%</td>
           </tr>
         
           <tr>
             <td><strong>2년차</strong></td>
-            <td>2,838억</td>
-            <td>797.9억</td>
-            <td class="text-success">2,040억</td>
-            <td>4,730억</td>
-            <td>2,642억</td>
-            <td class="text-success"><strong>2,088억</strong></td>
-            <td>71.9%</td>
+            <td>58.4억</td>
+            <td>26.9억</td>
+            <td class="text-success">31.5억</td>
+            <td>107.7억</td>
+            <td>315.9억</td>
+            <td class="text-danger"><strong>-208.1억</strong></td>
+            <td>53.9%</td>
           </tr>
         
           <tr>
             <td><strong>3년차</strong></td>
-            <td>2,523억</td>
-            <td>1,181억</td>
-            <td class="text-success">1,341억</td>
-            <td>7,253억</td>
-            <td>3,824억</td>
-            <td class="text-success"><strong>3,430억</strong></td>
-            <td>53.2%</td>
+            <td>55.4억</td>
+            <td>24.3억</td>
+            <td class="text-success">31.1억</td>
+            <td>163.1억</td>
+            <td>340.1억</td>
+            <td class="text-danger"><strong>-177억</strong></td>
+            <td>56.2%</td>
           </tr>
         </tbody>
             </table>
@@ -3434,6 +3296,9 @@
     applyStaticI18n();
     buildControls();
     render();
-  </script><div class="util-tip" id="utilTip"></div>
+  </script><div class="util-tip" id="utilTip" style="left: 137px; top: 122px;">
+        <div class="tt-title">1년차 (60%)</div>
+        <div class="tt-desc">초기 셋업 및 램프업(Ramp-up) 기간 반영</div>
+      </div>
 
 </body></html>
