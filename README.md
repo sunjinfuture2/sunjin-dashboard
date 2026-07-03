@@ -11,6 +11,6 @@ AIDC Revenue Simulator 정적 대시보드입니다.
 
 - 사이트: https://sunjinfuture2.github.io/sunjin-dashboard/
 - 배포 워크플로: `.github/workflows/deploy-pages.yml`
-- 시작 페이지: `index.html` → `Simulator_260701_3y_CAPEX_rev03.html`
+- 시작 페이지: `index.html` → `Simulator_260701_3y_CAPEX_rev03_EN_USD.html`
 
 시작 페이지를 변경하려면 `index.html`의 `START_PAGE` 상수만 수정하면 됩니다.
