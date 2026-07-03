@@ -1,0 +1,3359 @@
+<html lang="ko"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AIDC Revenue Simulator V2</title>
+  <style>
+    :root {
+      --bg-app: #eef3fb;
+      --bg-app-2: #e8f8f6;
+      --bg-panel: rgba(255, 255, 255, 0.92);
+      --bg-panel-solid: #ffffff;
+      --text-main: #101827;
+      --text-muted: #667085;
+      --text-soft: #94a3b8;
+      --border: #d9e2ef;
+      --border-strong: #c8d4e6;
+      --primary: #6457ff;
+      --primary-strong: #4f46e5;
+      --primary-soft: #ecebff;
+      --success: #06a77d;
+      --success-soft: #dcfce7;
+      --warning: #b7791f;
+      --warning-soft: #fff7e0;
+      --danger: #e5484d;
+      --danger-soft: #fee2e2;
+      --ink: #0f172a;
+      --hero-1: #111827;
+      --hero-2: #303579;
+      --hero-3: #4d58bd;
+      --hero-4: #2f6f72;
+      --teal: #28d6b3;
+      --gb200-color: #f97316;
+      --gb300-color: #0ea5e9;
+      --vr-color: #10b981;
+      --radius-xs: 10px;
+      --radius-sm: 14px;
+      --radius-md: 20px;
+      --radius-lg: 28px;
+      --radius-xl: 36px;
+      --shadow-card: 0 18px 45px rgba(31, 42, 68, 0.10);
+      --shadow-soft: 0 8px 24px rgba(31, 42, 68, 0.08);
+      --shadow-hero: 0 24px 60px rgba(30, 41, 99, 0.26);
+      --font-sans: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      line-height: 1.5;
+      background:
+        radial-gradient(circle at 8% -6%, rgba(105, 99, 255, 0.20), transparent 28%),
+        radial-gradient(circle at 92% 8%, rgba(40, 214, 179, 0.18), transparent 30%),
+        linear-gradient(135deg, var(--bg-app), var(--bg-app-2));
+      overflow-x: hidden;
+    }
+
+    button, input { font-family: inherit; }
+    button { cursor: pointer; }
+    .app-shell {
+      width: min(1480px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 42px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 386px;
+      border-radius: 36px;
+      padding: 42px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 48px;
+      align-items: center;
+      color: #fff;
+      background:
+        radial-gradient(circle at 42% 106%, rgba(40, 214, 179, 0.30) 0 18%, transparent 19%),
+        radial-gradient(circle at 102% 0%, rgba(100, 87, 255, 0.46) 0 25%, transparent 26%),
+        linear-gradient(135deg, var(--hero-1) 0%, var(--hero-2) 50%, var(--hero-4) 100%);
+      box-shadow: var(--shadow-hero);
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, rgba(255, 255, 255, 0.06), transparent 44%),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 72px);
+      opacity: 0.55;
+      pointer-events: none;
+    }
+    .hero-copy { position: relative; z-index: 1; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      color: rgba(255, 255, 255, 0.74);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--teal);
+      box-shadow: 0 0 0 7px rgba(40, 214, 179, 0.16);
+    }
+    .hero h1 {
+      max-width: 860px;
+      font-size: clamp(38px, 4.2vw, 60px);
+      line-height: 1.05;
+      letter-spacing: -0.06em;
+      font-weight: 950;
+      margin-bottom: 24px;
+    }
+    .hero-copy p {
+      max-width: 790px;
+      font-size: 16px;
+      font-weight: 650;
+      color: rgba(255, 255, 255, 0.70);
+      margin-bottom: 28px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .hero-btn {
+      border: 0;
+      min-height: 42px;
+      border-radius: 999px;
+      padding: 0 18px;
+      color: #111827;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 900;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+    .hero-btn:hover { transform: translateY(-2px); box-shadow: 0 13px 30px rgba(0,0,0,0.18); }
+    .hero-btn.secondary {
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.36);
+      background: rgba(255, 255, 255, 0.13);
+      backdrop-filter: blur(10px);
+    }
+
+    .view-tabs {
+      width: fit-content;
+      display: flex;
+      gap: 6px;
+      margin: 20px 0 18px;
+      padding: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.84);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+    }
+    .view-tab {
+      min-width: 120px;
+      min-height: 40px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: #697386;
+      font-size: 13px;
+      font-weight: 950;
+      transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .view-tab.active {
+      color: #fff;
+      background: #111827;
+      box-shadow: 0 10px 26px rgba(17, 24, 39, 0.20);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 424px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .control-panel, .panel, .summary-card {
+      background: var(--bg-panel);
+      border: 1px solid rgba(255, 255, 255, 0.88);
+      box-shadow: var(--shadow-card);
+      backdrop-filter: blur(10px);
+    }
+    .control-panel {
+      position: sticky;
+      top: 18px;
+      max-height: calc(100vh - 36px);
+      overflow: hidden;
+      border-radius: 26px;
+      display: flex;
+      flex-direction: column;
+    }
+    .panel-heading {
+      padding: 24px 24px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-heading h2 {
+      font-size: 20px;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+    }
+    .panel-pill-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--text-muted);
+    }
+    .soft-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 24px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      color: var(--primary-strong);
+      background: var(--primary-soft);
+      font-weight: 950;
+      white-space: nowrap;
+    }
+    .controls-root {
+      padding: 22px 24px 26px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    .controls-root::-webkit-scrollbar { width: 8px; }
+    .controls-root::-webkit-scrollbar-track { background: transparent; }
+    .controls-root::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.44); border-radius: 999px; }
+    .control-group { margin-bottom: 28px; }
+    .control-group:last-child { margin-bottom: 0; }
+    .control-group h3 {
+      font-size: 14px;
+      font-weight: 950;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .control-item {
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px dashed #d8e0ec;
+    }
+    .control-item:last-child { border-bottom: 0; padding-bottom: 0; margin-bottom: 0; }
+    .control-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .control-meta label {
+      font-size: 13px;
+      font-weight: 950;
+      color: var(--text-main);
+    }
+    .control-value {
+      flex: 0 0 auto;
+      min-width: 58px;
+      text-align: center;
+      border-radius: 999px;
+      padding: 3px 10px;
+      color: var(--primary-strong);
+      background: var(--primary-soft);
+      font-size: 11px;
+      font-weight: 950;
+    }
+    .control-value-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .control-value.pue-readonly {
+      color: var(--success);
+      background: var(--success-soft);
+    }
+    .control-field {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 116px;
+      gap: 10px;
+      align-items: center;
+    }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+    input[type="number"] {
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(248, 250, 252, 0.92);
+      color: var(--text-main);
+      padding: 8px 11px;
+      font-size: 13px;
+      font-weight: 850;
+      outline: none;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+    }
+    input[type="number"]:focus {
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(100, 87, 255, 0.12);
+    }
+    .base-hint {
+      margin-top: 8px;
+      color: #78859a;
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    .results-area { min-width: 0; }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .summary-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 142px;
+      border-radius: 22px;
+      padding: 20px 20px 18px;
+    }
+    .summary-card .label {
+      position: relative;
+      z-index: 1;
+      display: block;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 950;
+      margin-bottom: 6px;
+    }
+    .summary-card .value {
+      position: relative;
+      z-index: 1;
+      font-size: clamp(28px, 2.5vw, 38px);
+      line-height: 1.1;
+      letter-spacing: -0.06em;
+      font-weight: 950;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .summary-card .hint {
+      position: relative;
+      z-index: 1;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .text-primary { color: var(--primary) !important; }
+    .text-success { color: var(--success) !important; }
+    .text-danger { color: var(--danger) !important; }
+
+    .panel {
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 18px;
+    }
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .panel-head h2 {
+      font-size: 21px;
+      line-height: 1.22;
+      font-weight: 950;
+      letter-spacing: -0.05em;
+      margin-bottom: 8px;
+    }
+    .panel-head p {
+      max-width: 850px;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 750;
+    }
+    .dark-pill {
+      flex: 0 0 auto;
+      min-height: 44px;
+      border: 0;
+      border-radius: 999px;
+      padding: 0 18px;
+      color: #fff;
+      background: #111827;
+      font-size: 12px;
+      font-weight: 950;
+      box-shadow: 0 10px 24px rgba(17, 24, 39, 0.18);
+    }
+
+    .rack-card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .rack-select-card {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      min-height: 190px;
+      text-align: left;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 20px;
+      background: #fff;
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .rack-select-card:hover { transform: translateY(-3px); box-shadow: 0 18px 36px rgba(31, 42, 68, 0.12); }
+    .rack-select-card.active {
+      border-color: rgba(100, 87, 255, 0.72);
+      box-shadow: 0 18px 42px rgba(100, 87, 255, 0.18);
+    }
+    .rack-kicker {
+      display: inline-flex;
+      min-height: 24px;
+      align-items: center;
+      padding: 0 9px;
+      border-radius: 999px;
+      color: var(--rack-color, var(--primary));
+      background: color-mix(in srgb, var(--rack-color, var(--primary)) 12%, #ffffff);
+      font-size: 11px;
+      font-weight: 950;
+      margin-bottom: 12px;
+    }
+    .rack-select-card strong {
+      position: relative;
+      z-index: 1;
+      display: block;
+      color: var(--text-main);
+      font-size: 21px;
+      line-height: 1.16;
+      letter-spacing: -0.05em;
+      font-weight: 950;
+      margin-bottom: 6px;
+    }
+    .rack-sub {
+      position: relative;
+      z-index: 1;
+      display: block;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 850;
+      margin-bottom: 16px;
+    }
+    .mini-specs {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .mini-specs span {
+      display: block;
+      min-height: 48px;
+      border: 1px solid #e8edf5;
+      border-radius: 14px;
+      padding: 8px 10px;
+      background: #f8fafc;
+      color: #7b8798;
+      font-size: 10px;
+      font-weight: 900;
+    }
+    .mini-specs b {
+      display: block;
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 950;
+      margin-top: 3px;
+    }
+
+    .usage-strip {
+      display: grid;
+      grid-template-columns: 158px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      margin: 4px 0 18px;
+      padding: 14px 16px;
+      border: 1px solid #e4ebf6;
+      border-radius: 18px;
+      background: linear-gradient(90deg, #fbfdff, #f8fafc);
+      color: #5f6f85;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .meter {
+      overflow: hidden;
+      height: 11px;
+      border-radius: 999px;
+      background: #e6edf7;
+    }
+    .meter span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--success), var(--teal));
+      transition: width 0.25s ease;
+    }
+    .usage-strip strong {
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .rack-adjust-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .rack-adjust-card {
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      background: #fff;
+    }
+    .rack-adjust-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .rack-adjust-title strong {
+      color: var(--text-main);
+      font-size: 15px;
+      font-weight: 950;
+    }
+    .count-chip {
+      color: var(--rack-color, var(--primary));
+      background: color-mix(in srgb, var(--rack-color, var(--primary)) 11%, #ffffff);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 950;
+    }
+    .rack-count-control {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 82px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .rack-count-control input[type="range"] {
+      min-height: 28px;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+    .rack-count-control input[type="range"]:active {
+      cursor: grabbing;
+    }
+    .spec-grid {
+      display: grid;
+      gap: 10px;
+    }
+    .spec-input label {
+      display: block;
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 950;
+      margin-bottom: 5px;
+    }
+    .spec-input .krw-hint {
+      min-height: 17px;
+      color: var(--primary-strong);
+      font-size: 11px;
+      font-weight: 850;
+      margin-top: 5px;
+    }
+
+    .chart-panel { padding-bottom: 18px; }
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      min-height: 315px;
+      margin-top: 8px;
+    }
+    svg.chart {
+      width: 100%;
+      height: 315px;
+      display: block;
+      overflow: visible;
+    }
+    .axis, .gridline { stroke: #dbe4f0; stroke-width: 1; }
+    .gridline.zero { stroke: #bdc8d8; stroke-dasharray: 5 6; }
+    .line { fill: none; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+    .line.revenue { stroke: var(--primary); }
+    .line.expense { stroke: #f59e0b; }
+    .line.profit { stroke: var(--success); }
+    .dot { stroke: #fff; stroke-width: 3; r: 5; }
+    .dot.revenue { fill: var(--primary); }
+    .dot.expense { fill: #f59e0b; }
+    .dot.profit { fill: var(--success); }
+    .dot.hover-active { r: 7; stroke-width: 3; }
+    .hover-zone { fill: transparent; cursor: crosshair; }
+    .hover-line {
+      stroke: #94a3b8;
+      stroke-width: 1;
+      stroke-dasharray: 4 5;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.12s ease;
+    }
+    .chart-tooltip {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 6;
+      min-width: 168px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #111827;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: 0 14px 30px rgba(17, 24, 39, 0.28);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-9999px, -9999px);
+      transition: opacity 0.12s ease;
+      white-space: nowrap;
+    }
+    .chart-tooltip.visible { opacity: 1; }
+    .chart-tooltip .tt-title {
+      font-size: 12px;
+      font-weight: 950;
+      color: #fff;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .chart-tooltip .tt-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 5px;
+      color: rgba(255, 255, 255, 0.82);
+    }
+    .chart-tooltip .tt-row:first-of-type { margin-top: 0; }
+    .chart-tooltip .tt-row b {
+      margin-left: auto;
+      color: #fff;
+      font-weight: 950;
+    }
+    .chart-tooltip .tt-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+    }
+    .tick { fill: #64748b; font-size: 12px; font-weight: 850; }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .swatch {
+      width: 11px;
+      height: 11px;
+      border-radius: 4px;
+    }
+
+    .formula-panel {
+      background: rgba(255, 255, 255, 0.94);
+    }
+    .basis-alert {
+      border: 1px solid rgba(245, 158, 11, 0.38);
+      border-radius: 20px;
+      padding: 18px 18px 16px;
+      background: linear-gradient(180deg, #fffdf7, #fff8e8);
+      color: #68460d;
+      margin-bottom: 16px;
+    }
+    .basis-alert strong {
+      color: #68460d;
+      font-weight: 950;
+    }
+    .basis-alert p {
+      color: #755018;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .basis-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .basis-chips span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      border-radius: 999px;
+      padding: 0 11px;
+      color: #5b3f0b;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(245, 158, 11, 0.24);
+      font-size: 11px;
+      font-weight: 950;
+    }
+    .formula-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .formula-card {
+      min-height: 104px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #fff;
+      padding: 16px 18px;
+    }
+    .formula-card h3 {
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 950;
+      margin-bottom: 8px;
+    }
+    .formula-card p {
+      color: #334155;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.65;
+    }
+    .formula-card code {
+      font-family: inherit;
+      color: #273449;
+      white-space: normal;
+    }
+
+    .table-panel {
+      overflow: hidden;
+      padding-bottom: 10px;
+    }
+    .table-scroll { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 790px;
+    }
+    th, td {
+      padding: 15px 16px;
+      border-bottom: 1px solid #e5ebf5;
+      text-align: right;
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    th {
+      color: #6b7688;
+      background: #f8fafc;
+      font-size: 12px;
+      font-weight: 950;
+    }
+    th:first-child, td:first-child { text-align: left; }
+    tbody tr:hover { background: #fafcff; }
+    tbody tr:last-child td { border-bottom: 0; }
+    td strong { font-weight: 950; }
+
+    /* Facility type toggle */
+    .segmented {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 5px;
+      background: #eef2fb;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+    .segmented-btn {
+      border: 1px solid transparent;
+      background: transparent;
+      border-radius: 10px;
+      padding: 9px 8px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+    }
+    .segmented-btn:hover { color: var(--primary-strong); }
+    .segmented-btn.active {
+      background: #fff;
+      color: var(--primary-strong);
+      border-color: var(--border-strong);
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.14);
+    }
+
+    /* Facility cost detail table */
+    .facility-table td, .facility-table th { font-weight: 800; }
+    .facility-table .fac-num { text-align: right; }
+    /* Table header row: left-align */
+    .facility-table thead th,
+    .facility-table thead th.fac-num { text-align: left; }
+    .facility-table td.fac-active,
+    .facility-table th.fac-active {
+      background: var(--primary-soft);
+      color: var(--primary-strong);
+    }
+    .facility-table th.fac-active { color: var(--primary-strong); }
+    .facility-table .fac-note {
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: normal;
+      min-width: 340px;
+      max-width: 420px;
+      line-height: 1.5;
+    }
+    /* Rows 2-6 col 1 (category): left + vertical-center */
+    .facility-table td.fac-cat { vertical-align: middle; text-align: left; }
+    .facility-table .fac-note-head {
+      font-size: 11px;
+      font-weight: 900;
+      color: var(--text-soft);
+      letter-spacing: 0.02em;
+      margin-bottom: 3px;
+    }
+    .facility-table .fac-detail-list {
+      margin: 0 0 8px;
+      padding-left: 16px;
+    }
+    .facility-table .fac-detail-list li {
+      margin: 2px 0;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+    .facility-table .fac-cost-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 900;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+    }
+    .facility-table .fac-cost-label.same { background: #eef2f7; color: #6b7688; }
+    .facility-table .fac-cost-label.save { background: var(--success-soft); color: var(--success); }
+    .facility-table .fac-logic {
+      color: var(--text-muted);
+      font-weight: 600;
+      line-height: 1.5;
+    }
+    .facility-table .fac-diff {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .facility-table .fac-diff.same { background: #eef2f7; color: #8a94a6; }
+    .facility-table .fac-diff.save { background: var(--success-soft); color: var(--success); }
+    .facility-table .fac-total td {
+      border-top: 2px solid var(--border-strong);
+      background: #fbfcfe;
+      font-size: 14px;
+    }
+    .fac-pill {
+      align-self: flex-start;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .fac-pill.remodel { background: var(--success-soft); color: var(--success); }
+    .fac-pill.newbuild { background: var(--primary-soft); color: var(--primary-strong); }
+    .fac-pill.custom { background: var(--warning-soft); color: var(--warning); }
+    .mod-tag {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 8px;
+      padding: 3px 9px;
+      border-radius: 8px;
+      background: var(--warning-soft);
+      color: var(--warning);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    /* Per-year target utilization control */
+    .util-years {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .util-year {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 10px 8px;
+      background: #f4f7fd;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: help;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+    .util-year:hover {
+      border-color: var(--primary);
+      background: #eef0ff;
+    }
+    .util-year-label {
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .util-year-field {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      background: #fff;
+      border: 1px solid var(--border-strong);
+      border-radius: 9px;
+      padding: 6px 8px;
+    }
+    .util-year-field input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      text-align: right;
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--text-main);
+      -moz-appearance: textfield;
+    }
+    .util-year-field input::-webkit-outer-spin-button,
+    .util-year-field input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .util-year-suffix { font-size: 12px; font-weight: 800; color: var(--text-soft); }
+    .util-hint-icon {
+      display: inline-block;
+      margin-left: 4px;
+      width: 15px;
+      height: 15px;
+      line-height: 15px;
+      text-align: center;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary-strong);
+      font-size: 10px;
+      font-weight: 900;
+      cursor: help;
+    }
+    /* Per-year utilization hover popup (same tone as chart tooltip) */
+    .util-tip {
+      position: fixed;
+      z-index: 9999;
+      max-width: 260px;
+      padding: 11px 14px;
+      border-radius: 12px;
+      background: #111827;
+      color: #fff;
+      font-size: 12px;
+      box-shadow: 0 14px 30px rgba(17, 24, 39, 0.32);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.12s ease;
+    }
+    .util-tip.visible { opacity: 1; }
+    .util-tip .tt-title {
+      font-size: 12px;
+      font-weight: 950;
+      margin-bottom: 5px;
+      letter-spacing: -0.02em;
+    }
+    .util-tip .tt-desc {
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .compare-summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .compare-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: #fff;
+      padding: 19px;
+    }
+    .compare-card.active {
+      border-color: rgba(100, 87, 255, 0.70);
+      box-shadow: 0 18px 42px rgba(100, 87, 255, 0.13);
+    }
+    .compare-card h3 {
+      font-size: 18px;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+      margin-bottom: 4px;
+    }
+    .compare-card p {
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 850;
+      margin-bottom: 14px;
+    }
+    .compare-metric {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .compare-metric span {
+      border-radius: 14px;
+      padding: 10px;
+      background: #f8fafc;
+      color: #718096;
+      font-size: 10px;
+      font-weight: 950;
+    }
+    .compare-metric b {
+      display: block;
+      color: var(--text-main);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .compare-card button {
+      width: 100%;
+      min-height: 38px;
+      border: 0;
+      border-radius: 999px;
+      color: #fff;
+      background: #111827;
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .empty-note {
+      border: 1px dashed #cfd9e9;
+      border-radius: 18px;
+      padding: 18px;
+      color: #64748b;
+      background: #f8fafc;
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    @media (max-width: 1240px) {
+      .hero { grid-template-columns: 1fr; gap: 26px; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .control-panel { position: static; max-height: none; }
+      .controls-root { max-height: none; }
+    }
+    @media (max-width: 980px) {
+      .app-shell { width: min(100% - 18px, 1480px); padding-top: 10px; }
+      .hero { padding: 28px; border-radius: 26px; }
+      .summary-grid, .rack-card-grid, .rack-adjust-grid, .compare-summary { grid-template-columns: 1fr; }
+      .formula-grid { grid-template-columns: 1fr; }
+      .view-tabs { width: 100%; overflow-x: auto; }
+      .view-tab { min-width: 112px; }
+      .usage-strip { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px) {
+      .hero h1 { font-size: 34px; }
+      .control-field, .rack-count-control { grid-template-columns: 1fr; }
+      .panel, .control-panel { border-radius: 20px; }
+      .panel-head { flex-direction: column; }
+      .dark-pill { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">AIDC Revenue Simulator</div>
+        <h1>AIDC Rack System<br>Data Center Revenue-Structure Simulator</h1>
+        <p>
+          Adjust Server/GPU Lease, Colocation and Model Comparison on a single screen.<br>
+          Changing the rack type instantly updates power, price, performance and GPU rental rate per rack across the annual-revenue / cumulative-P&amp;L graph and the formula panel.
+        </p>
+        <div class="hero-actions">
+          <button type="button" class="hero-btn" data-scenario="default">Report Default</button>
+          <button type="button" class="hero-btn" data-scenario="conservative">Conservative Scenario</button>
+          <button type="button" class="hero-btn" data-scenario="aggressive">Aggressive Scenario</button>
+        </div>
+      </div>
+
+    </header>
+
+    <nav class="view-tabs" aria-label="Revenue model tabs">
+      <button type="button" class="view-tab active" data-view="gpu">Server/GPU Lease</button>
+      <button type="button" class="view-tab" data-view="colo">Colocation</button>
+      <button type="button" class="view-tab" data-view="compare">Model Comparison</button>
+    </nav>
+
+    <div class="dashboard-grid">
+      <aside class="control-panel">
+        <div class="panel-heading">
+          <h2>Adjust Inputs</h2>
+          <div class="panel-pill-row">
+            <span id="controlModeLabel">Common Power &amp; Ops Basis</span>
+            <span class="soft-badge" id="controlScopeBadge">Both models</span>
+          </div>
+        </div>
+        <div class="controls-root" id="controlsRoot">
+        <section class="control-group" data-views="gpu,colo,compare" data-scope="Both models" style="display: block;">
+          <h3>Common Power &amp; Ops Basis</h3>
+          
+                <div class="control-item">
+                  <div class="control-meta">
+                    <label>Target Utilization <span class="util-hint-icon" title="Hover over each year for details">ⓘ</span></label>
+                    <span class="control-value" data-util-avg="">3-yr avg 77%</span>
+                  </div>
+                  <div class="util-years">
+                    
+                      <div class="util-year" data-util-year="1">
+                        <span class="util-year-label">Year 1</span>
+                        <div class="util-year-field">
+                          <input type="number" min="0" max="100" step="1" value="60" data-input="utilY1" aria-label="Year 1 utilization">
+                          <span class="util-year-suffix">%</span>
+                        </div>
+                      </div>
+                    
+                      <div class="util-year" data-util-year="2">
+                        <span class="util-year-label">Year 2</span>
+                        <div class="util-year-field">
+                          <input type="number" min="0" max="100" step="1" value="90" data-input="utilY2" aria-label="Year 2 utilization">
+                          <span class="util-year-suffix">%</span>
+                        </div>
+                      </div>
+                    
+                      <div class="util-year" data-util-year="3">
+                        <span class="util-year-label">Year 3</span>
+                        <div class="util-year-field">
+                          <input type="number" min="0" max="100" step="1" value="80" data-input="utilY3" aria-label="Year 3 utilization">
+                          <span class="util-year-suffix">%</span>
+                        </div>
+                      </div>
+                    
+                  </div>
+                  <div class="base-hint">Year 1 ramp-up 60% · Year 2 peak 90% · Year 3 conservative decline 80% (per-year utilization scenario)</div>
+                </div>
+              
+                <div class="control-item">
+                  <div class="control-meta">
+                    <label for="control_totalPowerKw">Total Power Capacity</label>
+                    <div class="control-value-wrap">
+                      <span class="control-value" data-control-badge="totalPowerKw">2,500kW</span>
+                      
+                    </div>
+                  </div>
+                  <input id="control_totalPowerKw" type="number" min="1" max="30000" step="10" value="2500" data-input="totalPowerKw" data-currency="">
+                  <div class="base-hint">Report default: 2,500kW</div>
+                </div>
+              
+                <div class="control-item">
+                  <div class="control-meta">
+                    <label for="control_itPowerKw">IT Power Capacity</label>
+                    <div class="control-value-wrap">
+                      <span class="control-value" data-control-badge="itPowerKw">2,000kW</span>
+                      <span class="control-value pue-readonly" data-pue-badge="">PUE 1.25</span>
+                    </div>
+                  </div>
+                  <input id="control_itPowerKw" type="number" min="1" max="20000" step="10" value="2000" data-input="itPowerKw" data-currency="">
+                  <div class="base-hint">Report default: 2,000kW</div>
+                </div>
+              
+                <div class="control-item">
+                  <div class="control-meta">
+                    <label>Facility Type (New-build / Remodel)</label>
+                    <span class="control-value" data-construction-badge="">Remodel</span>
+                  </div>
+                  <div class="segmented" role="group" aria-label="Facility Type (New-build / Remodel)">
+                    
+                      <button type="button" class="segmented-btn " data-construction="newbuild">New-build</button>
+                    
+                      <button type="button" class="segmented-btn active" data-construction="remodel">Remodel</button>
+                    
+                  </div>
+                  <div class="base-hint">New-build $23.3M · Remodel $18.0M (remodel saves ~23% vs new-build)</div>
+                </div>
+              
+              <div class="control-item">
+                <div class="control-meta">
+                  <label for="control_facilityCapexEok_range">Facility CAPEX</label>
+                  <div class="control-value-wrap">
+                    <span class="control-value" data-control-badge="facilityCapexEok">$18.0M</span>
+                    
+                  </div>
+                </div>
+                <div class="control-field">
+                  <input id="control_facilityCapexEok_range" type="range" min="0" max="70" step="0.5" value="18" data-input="facilityCapexEok" data-currency="usdM">
+                  <input type="number" min="0" max="70" step="0.5" value="18" data-input="facilityCapexEok" data-currency="usdM" aria-label="Facility CAPEX">
+                </div>
+                <div class="base-hint">Report default: $18.0M</div>
+              </div>
+            
+              <div class="control-item">
+                <div class="control-meta">
+                  <label for="control_energyCostRate_range">Energy Charge Rate</label>
+                  <div class="control-value-wrap">
+                    <span class="control-value" data-control-badge="energyCostRate">$0.0811/kWh</span>
+                    
+                  </div>
+                </div>
+                <div class="control-field">
+                  <input id="control_energyCostRate_range" type="range" min="0.03" max="0.25" step="0.001" value="0.0811" data-input="energyCostRate" data-currency="usdKwh">
+                  <input type="number" min="0.03" max="0.25" step="0.001" value="0.0811" data-input="energyCostRate" data-currency="usdKwh" aria-label="Energy Charge Rate">
+                </div>
+                <div class="base-hint">Report default: $0.0811/kWh</div>
+              </div>
+            
+              <div class="control-item">
+                <div class="control-meta">
+                  <label for="control_basicChargeKwMonth_range">Basic Electricity Charge</label>
+                  <div class="control-value-wrap">
+                    <span class="control-value" data-control-badge="basicChargeKwMonth">$6.54/kW·mo</span>
+                    
+                  </div>
+                </div>
+                <div class="control-field">
+                  <input id="control_basicChargeKwMonth_range" type="range" min="0" max="25" step="0.05" value="6.54" data-input="basicChargeKwMonth" data-currency="usdKwMo">
+                  <input type="number" min="0" max="25" step="0.05" value="6.54" data-input="basicChargeKwMonth" data-currency="usdKwMo" aria-label="Basic Electricity Charge">
+                </div>
+                <div class="base-hint">Report default: $6.54/kW·mo</div>
+              </div>
+            
+        </section>
+      
+        <section class="control-group" data-views="gpu,compare" data-scope="GPU model" style="display: block;">
+          <h3>GPUaaS Settings</h3>
+          
+              <div class="control-item">
+                <div class="control-meta">
+                  <label for="control_fxKrwUsd_range">FX Rate</label>
+                  <div class="control-value-wrap">
+                    <span class="control-value" data-control-badge="fxKrwUsd">1,500 KRW/USD</span>
+                    
+                  </div>
+                </div>
+                <div class="control-field">
+                  <input id="control_fxKrwUsd_range" type="range" min="1000" max="1800" step="10" value="1500" data-input="fxKrwUsd" data-currency="">
+                  <input type="number" min="1000" max="1800" step="10" value="1500" data-input="fxKrwUsd" data-currency="" aria-label="FX Rate">
+                </div>
+                <div class="base-hint">Report default: 1,500 KRW/USD</div>
+              </div>
+            
+                <div class="control-item">
+                  <div class="control-meta">
+                    <label for="control_depY1">Year 1 Depreciation</label>
+                    <div class="control-value-wrap">
+                      <span class="control-value" data-control-badge="depY1">33%</span>
+                      
+                    </div>
+                  </div>
+                  <input id="control_depY1" type="number" min="0" max="100" step="1" value="33" data-input="depY1" data-currency="">
+                  <div class="base-hint">Report default: 33%</div>
+                </div>
+              
+                <div class="control-item">
+                  <div class="control-meta">
+                    <label for="control_depY2">Year 2 Depreciation</label>
+                    <div class="control-value-wrap">
+                      <span class="control-value" data-control-badge="depY2">66%</span>
+                      
+                    </div>
+                  </div>
+                  <input id="control_depY2" type="number" min="0" max="100" step="1" value="66" data-input="depY2" data-currency="">
+                  <div class="base-hint">Report default: 66%</div>
+                </div>
+              
+                <div class="control-item">
+                  <div class="control-meta">
+                    <label for="control_depY3">Year 3 Depreciation</label>
+                    <div class="control-value-wrap">
+                      <span class="control-value" data-control-badge="depY3">99%</span>
+                      
+                    </div>
+                  </div>
+                  <input id="control_depY3" type="number" min="0" max="100" step="1" value="99" data-input="depY3" data-currency="">
+                  <div class="base-hint">Report default: 99%</div>
+                </div>
+              
+        </section>
+      
+        <section class="control-group" data-views="colo" data-scope="Colocation model" style="display: none;">
+          <h3>Colocation Settings</h3>
+          
+              <div class="control-item">
+                <div class="control-meta">
+                  <label for="control_colocationFeeKwMonth_range">Colocation Rate</label>
+                  <div class="control-value-wrap">
+                    <span class="control-value" data-control-badge="colocationFeeKwMonth">$86.67/kW·mo</span>
+                    
+                  </div>
+                </div>
+                <div class="control-field">
+                  <input id="control_colocationFeeKwMonth_range" type="range" min="20" max="200" step="0.5" value="86.67" data-input="colocationFeeKwMonth" data-currency="usdKwMo">
+                  <input type="number" min="20" max="200" step="0.5" value="86.67" data-input="colocationFeeKwMonth" data-currency="usdKwMo" aria-label="Colocation Rate">
+                </div>
+                <div class="base-hint">Report default: $86.67/kW·mo</div>
+              </div>
+            
+              <div class="control-item">
+                <div class="control-meta">
+                  <label for="control_electricSaleRate_range">Electricity Resale Rate</label>
+                  <div class="control-value-wrap">
+                    <span class="control-value" data-control-badge="electricSaleRate">$0.1134/kWh</span>
+                    
+                  </div>
+                </div>
+                <div class="control-field">
+                  <input id="control_electricSaleRate_range" type="range" min="0.05" max="0.25" step="0.001" value="0.1134" data-input="electricSaleRate" data-currency="usdKwh">
+                  <input type="number" min="0.05" max="0.25" step="0.001" value="0.1134" data-input="electricSaleRate" data-currency="usdKwh" aria-label="Electricity Resale Rate">
+                </div>
+                <div class="base-hint">Report default: $0.1134/kWh</div>
+              </div>
+            
+        </section>
+      </div>
+      </aside>
+
+      <main class="results-area">
+        <section class="summary-grid" id="summaryCards" aria-label="Revenue summary">
+        <article class="summary-card">
+          <span class="label">Annual Revenue</span>
+          <div class="value text-primary">$126.1M</div>
+          <div class="hint">+$0.0M vs report default</div>
+        </article>
+        <article class="summary-card">
+          <span class="label">3-yr Cumulative Revenue</span>
+          <div class="value text-primary">$483.6M</div>
+          <div class="hint">Vera Rubin 10 units · 36,000 PFLOPS total</div>
+        </article>
+        <article class="summary-card">
+          <span class="label">3-yr Cumulative Expense</span>
+          <div class="value">$254.9M</div>
+          <div class="hint">IT CAPEX $78.0M + Facility $18.0M</div>
+        </article>
+        <article class="summary-card">
+          <span class="label">3-yr Cumulative P&amp;L</span>
+          <div class="value text-success">$228.6M</div>
+          <div class="hint">BEP Year 1 · 47.3% of cumulative revenue </div>
+        </article>
+      </section>
+        <div id="mainContent">
+          
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Rack System Selection</h2>
+              <p>Default power, price and performance are taken from the report's GB200 · GB300 · Vera Rubin comparison. Click a card to auto-place the maximum number of that rack within the IT power budget.</p>
+            </div>
+            <button type="button" class="dark-pill" data-reset-selected="">Re-apply selected rack defaults</button>
+          </div>
+          <div class="rack-card-grid">
+            
+                <button type="button" class="rack-select-card " data-select-rack="gb200" style="--rack-color:var(--gb200-color)">
+                  <span class="rack-kicker">NVL72 · max 16 units</span>
+                  <strong>GB200 NVL72</strong>
+                  <span class="rack-sub">36 Grace CPU + 72 Blackwell GPU</span>
+                  <div class="mini-specs">
+                    <span>Power / rack<b>120kW</b></span>
+                    <span>Price / rack<b>$3,000,000</b></span>
+                    <span>Base rate<b>$13.33/hr</b></span>
+                    <span>FP4 perf.<b>1,440 PFLOPS</b></span>
+                  </div>
+                </button>
+              
+                <button type="button" class="rack-select-card " data-select-rack="gb300" style="--rack-color:var(--gb300-color)">
+                  <span class="rack-kicker">NVL72 · max 14 units</span>
+                  <strong>GB300 NVL72</strong>
+                  <span class="rack-sub">36 Grace CPU + 72 Blackwell Ultra GPU</span>
+                  <div class="mini-specs">
+                    <span>Power / rack<b>140kW</b></span>
+                    <span>Price / rack<b>$4,000,000</b></span>
+                    <span>Base rate<b>$21/hr</b></span>
+                    <span>FP4 perf.<b>2,160 PFLOPS</b></span>
+                  </div>
+                </button>
+              
+                <button type="button" class="rack-select-card active" data-select-rack="veraRubin" style="--rack-color:var(--vr-color)">
+                  <span class="rack-kicker">NVL72 · max 10 units</span>
+                  <strong>Vera Rubin NVL72</strong>
+                  <span class="rack-sub">36 Vera CPU + 72 Rubin GPU</span>
+                  <div class="mini-specs">
+                    <span>Power / rack<b>190kW</b></span>
+                    <span>Price / rack<b>$7,800,000</b></span>
+                    <span>Base rate<b>$33.33/hr</b></span>
+                    <span>FP4 perf.<b>3,600 PFLOPS</b></span>
+                  </div>
+                </button>
+              
+          </div>
+        </section>
+      
+          
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Adjust Rack Configuration</h2>
+              <p>Directly change rack count, price per rack, power per rack and GPU hourly rental rate. Counts are auto-capped so they never exceed the IT power budget.</p>
+            </div>
+          </div>
+          <div class="usage-strip">
+            <span>GPU rack power utilization</span>
+            <div class="meter"><span style="width:95%"></span></div>
+            <strong>95% (1,900kW / 2,000kW)</strong>
+          </div>
+          <div class="rack-adjust-grid">
+            
+                <article class="rack-adjust-card" data-rack-card="gb200" style="--rack-color:var(--gb200-color)">
+                  <div class="rack-adjust-title">
+                    <strong>GB200</strong>
+                    <span class="count-chip">0 units</span>
+                  </div>
+                  <div class="rack-count-control">
+                    <input type="range" min="0" max="16" step="1" value="0" data-rack-count="gb200">
+                    <input type="number" min="0" max="16" step="1" value="0" data-rack-count="gb200" aria-label="GB200 rack count">
+                  </div>
+                  <div class="spec-grid">
+                    <div class="spec-input">
+                      <label>Price / rack (USD)</label>
+                      <input type="number" min="0" step="1000" value="3000000" data-rack-key="gb200" data-rack-prop="rackPriceUsd">
+                      <div class="krw-hint">≈ $3M</div>
+                    </div>
+                    <div class="spec-input">
+                      <label>Power / rack (kW)</label>
+                      <input type="number" min="1" step="1" value="120" data-rack-key="gb200" data-rack-prop="rackPowerKw">
+                    </div>
+                    <div class="spec-input">
+                      <label>GPU rental rate (USD/hr)</label>
+                      <input type="number" min="0" step="0.5" value="13.33" data-rack-key="gb200" data-rack-prop="gpuHourlyRate">
+                    </div>
+                  </div>
+                </article>
+              
+                <article class="rack-adjust-card" data-rack-card="gb300" style="--rack-color:var(--gb300-color)">
+                  <div class="rack-adjust-title">
+                    <strong>GB300</strong>
+                    <span class="count-chip">0 units</span>
+                  </div>
+                  <div class="rack-count-control">
+                    <input type="range" min="0" max="14" step="1" value="0" data-rack-count="gb300">
+                    <input type="number" min="0" max="14" step="1" value="0" data-rack-count="gb300" aria-label="GB300 rack count">
+                  </div>
+                  <div class="spec-grid">
+                    <div class="spec-input">
+                      <label>Price / rack (USD)</label>
+                      <input type="number" min="0" step="1000" value="4000000" data-rack-key="gb300" data-rack-prop="rackPriceUsd">
+                      <div class="krw-hint">≈ $4M</div>
+                    </div>
+                    <div class="spec-input">
+                      <label>Power / rack (kW)</label>
+                      <input type="number" min="1" step="1" value="140" data-rack-key="gb300" data-rack-prop="rackPowerKw">
+                    </div>
+                    <div class="spec-input">
+                      <label>GPU rental rate (USD/hr)</label>
+                      <input type="number" min="0" step="0.5" value="21" data-rack-key="gb300" data-rack-prop="gpuHourlyRate">
+                    </div>
+                  </div>
+                </article>
+              
+                <article class="rack-adjust-card" data-rack-card="veraRubin" style="--rack-color:var(--vr-color)">
+                  <div class="rack-adjust-title">
+                    <strong>Vera Rubin</strong>
+                    <span class="count-chip">10 units</span>
+                  </div>
+                  <div class="rack-count-control">
+                    <input type="range" min="0" max="10" step="1" value="10" data-rack-count="veraRubin">
+                    <input type="number" min="0" max="10" step="1" value="10" data-rack-count="veraRubin" aria-label="Vera Rubin rack count">
+                  </div>
+                  <div class="spec-grid">
+                    <div class="spec-input">
+                      <label>Price / rack (USD)</label>
+                      <input type="number" min="0" step="1000" value="7800000" data-rack-key="veraRubin" data-rack-prop="rackPriceUsd">
+                      <div class="krw-hint">≈ $7.8M</div>
+                    </div>
+                    <div class="spec-input">
+                      <label>Power / rack (kW)</label>
+                      <input type="number" min="1" step="1" value="190" data-rack-key="veraRubin" data-rack-prop="rackPowerKw">
+                    </div>
+                    <div class="spec-input">
+                      <label>GPU rental rate (USD/hr)</label>
+                      <input type="number" min="0" step="0.5" value="33.33" data-rack-key="veraRubin" data-rack-prop="gpuHourlyRate">
+                    </div>
+                  </div>
+                </article>
+              
+          </div>
+        </section>
+      
+          
+        <section class="panel chart-panel">
+          <div class="panel-head">
+            <div>
+              <h2>3-Year Cumulative Trend</h2>
+              <p>Compares cumulative revenue, expense and P&amp;L on the same axis.</p>
+            </div>
+          </div>
+          <div class="chart-wrap" id="chartWrap">
+        <svg class="chart" viewBox="0 0 860 300" role="img" aria-label="3-year cumulative trend chart">
+          <line class="gridline" x1="76" y1="262" x2="836" y2="262"></line><text class="tick" x="64" y="266" text-anchor="end">-$58.0M</text><line class="gridline" x1="76" y1="202.5" x2="836" y2="202.5"></line><text class="tick" x="64" y="206.5" text-anchor="end">$91.9M</text><line class="gridline" x1="76" y1="143.00000000000003" x2="836" y2="143.00000000000003"></line><text class="tick" x="64" y="147.00000000000003" text-anchor="end">$241.8M</text><line class="gridline" x1="76" y1="83.50000000000001" x2="836" y2="83.50000000000001"></line><text class="tick" x="64" y="87.50000000000001" text-anchor="end">$391.7M</text><line class="gridline" x1="76" y1="24.000000000000025" x2="836" y2="24.000000000000025"></line><text class="tick" x="64" y="28.000000000000025" text-anchor="end">$541.6M</text><line class="gridline zero" x1="76" y1="238.96774193548387" x2="836" y2="238.96774193548387"></line>
+          <line class="axis" x1="76" y1="262" x2="836" y2="262"></line>
+          <line class="axis" x1="76" y1="24" x2="76" y2="262"></line>
+          <polyline class="line revenue" points="76,188.8976157082749 456,113.79242636746145 836,47.03225806451614"></polyline><circle class="dot revenue" cx="76" cy="188.8976157082749" data-series="revenue" data-index="0"></circle><circle class="dot revenue" cx="456" cy="113.79242636746145" data-series="revenue" data-index="1"></circle><circle class="dot revenue" cx="836" cy="47.03225806451614" data-series="revenue" data-index="2"></circle><polyline class="line expense" points="76,190.16580669777517 456,169.05105334936792 836,137.78636566457945"></polyline><circle class="dot expense" cx="76" cy="190.16580669777517" data-series="expense" data-index="0"></circle><circle class="dot expense" cx="456" cy="169.05105334936792" data-series="expense" data-index="1"></circle><circle class="dot expense" cx="836" cy="137.78636566457945" data-series="expense" data-index="2"></circle><polyline class="line profit" points="76,237.69955094598362 456,183.7091149535774 836,148.21363433542058"></polyline><circle class="dot profit" cx="76" cy="237.69955094598362" data-series="profit" data-index="0"></circle><circle class="dot profit" cx="456" cy="183.7091149535774" data-series="profit" data-index="1"></circle><circle class="dot profit" cx="836" cy="148.21363433542058" data-series="profit" data-index="2"></circle>
+          
+        <line class="hover-line" data-hover-index="0" x1="76" y1="24" x2="76" y2="262"></line>
+      
+        <line class="hover-line" data-hover-index="1" x1="456" y1="24" x2="456" y2="262"></line>
+      
+        <line class="hover-line" data-hover-index="2" x1="836" y1="24" x2="836" y2="262"></line>
+      
+          <rect class="hover-zone" data-hover-index="0" x="76" y="24" width="253.33333333333334" height="238"></rect><rect class="hover-zone" data-hover-index="1" x="329.3333333333333" y="24" width="253.33333333333334" height="238"></rect><rect class="hover-zone" data-hover-index="2" x="709.3333333333334" y="24" width="253.33333333333334" height="238"></rect>
+          
+        <text class="tick" x="76" y="292" text-anchor="middle">Year 1</text>
+      
+        <text class="tick" x="456" y="292" text-anchor="middle">Year 2</text>
+      
+        <text class="tick" x="836" y="292" text-anchor="middle">Year 3</text>
+      
+        </svg>
+        <div class="chart-tooltip" id="chartTooltip"></div>
+      </div>
+          <div class="legend" id="legend">
+        <div class="legend-item"><span class="swatch" style="background:var(--primary)"></span>Cumulative Revenue</div>
+      
+        <div class="legend-item"><span class="swatch" style="background:#f59e0b"></span>Cumulative Expense</div>
+      
+        <div class="legend-item"><span class="swatch" style="background:var(--success)"></span>Cumulative P&amp;L</div>
+      </div>
+        </section>
+      
+          
+        <section class="panel formula-panel">
+          <div class="panel-head">
+            <div>
+              <h2>Formulas &amp; Basis</h2>
+              <p>See how inputs and rack base specs feed the revenue/expense formulas. GPU rental rate and rack specs are directly adjustable.</p>
+            </div>
+          </div>
+
+          <div class="basis-alert">
+            <p><strong>Current basis: selected rack is Vera Rubin NVL72, configured as Vera Rubin 10 units. Using 190kW/rack, $7,800,000/rack, and a base rental rate of $33.33/hr, this yields annual revenue $126.1M, IT equipment CAPEX $78.0M, and electricity cost $1.5M.</strong></p>
+            <div class="usage-strip" style="margin:0; background:rgba(255,255,255,0.58); border-color:rgba(245,158,11,0.22)">
+              <span>Power allocation status</span>
+              <div class="meter"><span style="width:95%"></span></div>
+              <strong>GPU rack power utilization: 95% (Vera Rubin 10 units / IT power 2,000kW)</strong>
+            </div>
+            <div class="basis-chips">
+              <span>Utilization 60·90·80%</span>
+              <span>Total power 2,500kW</span>
+              <span>IT power 2,000kW</span>
+              <span>PUE 1.25</span>
+              <span>Facility CAPEX $18.0M</span>
+              <span>Energy rate $0.0811/kWh</span>
+              <span>Basic charge $6.54/kW·mo</span>
+              <span>FX 1,500 KRW/USD</span><span>Depreciation 33/66/99%</span>
+            </div>
+          </div>
+
+          <div class="formula-grid">
+            <article class="formula-card">
+              <h3>GPUaaS Annual Revenue</h3>
+              <p><code>Σ(rack count × GPUs per rack × 8,760 h × utilization × GPU hourly rate)</code></p>
+            </article>
+            <article class="formula-card">
+              <h3>Colocation Annual Revenue</h3>
+              <p><code>IT power (kW) × colocation rate × 12 months + total power (kW) × 8,760 h × utilization × electricity resale rate</code></p>
+            </article>
+            <article class="formula-card">
+              <h3>IT Equipment CAPEX</h3>
+              <p><code>Σ(rack count × rack price (USD) × FX)</code></p>
+            </article>
+            <article class="formula-card">
+              <h3>Electricity Cost</h3>
+              <p><code>total power (kW) × basic charge × 12 + used IT power (kW) × PUE × 8,760 h × utilization × energy rate</code></p>
+            </article>
+          </div>
+        </section>
+      
+          
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>CAPEX Facility Cost Breakdown</h2>
+              <p>Facility-cost table for new-build vs. remodel. Toggling 'Facility Type' above updates facility CAPEX automatically. Power, HVAC and telecom systems are identical regardless of new-build; savings come from building/civil and design/overhead.</p>
+            </div>
+            <span class="fac-pill remodel">Remodel · $18.0M</span>
+          </div>
+          <div class="table-scroll">
+            <table class="facility-table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th class="fac-num ">New-build Budget</th>
+                  <th class="fac-num fac-active">Remodel Budget</th>
+                  <th class="fac-num">Δ</th>
+                  <th>Notes (details &amp; cost-adjustment rationale)</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+        <tr>
+          <td class="fac-cat"><strong>Electrical</strong></td>
+          <td class="fac-num ">$6.3M</td>
+          <td class="fac-num fac-active">$6.3M</td>
+          <td class="fac-num"><span class="fac-diff same">Same</span></td>
+          <td class="fac-note">
+        <div class="fac-note-head">[Details]</div>
+        <ul class="fac-detail-list"><li>Switchgear, transformers, redundant UPS</li><li>Emergency generators, ATS/CTTS, battery banks</li><li>Feeder cables and busbars</li></ul>
+        <div class="fac-cost-label same">[Identical (100%)]</div>
+        <div class="fac-logic">Core equipment (2.5 MW HV switchgear, UPS, batteries) is deployed at identical capacity regardless of new-build vs. remodel.</div>
+      </td>
+        </tr>
+      
+        <tr>
+          <td class="fac-cat"><strong>HVAC / Cooling</strong></td>
+          <td class="fac-num ">$4.5M</td>
+          <td class="fac-num fac-active">$4.5M</td>
+          <td class="fac-num"><span class="fac-diff same">Same</span></td>
+          <td class="fac-note">
+        <div class="fac-note-head">[Details]</div>
+        <ul class="fac-detail-list"><li>High-efficiency chillers, cooling towers, CRAH units</li><li>Direct liquid cooling (DLC) CDUs and piping</li><li>Free-cooling system and containment</li></ul>
+        <div class="fac-cost-label same">[Identical (100%)]</div>
+        <div class="fac-logic">Full DLC (liquid cooling) system to control ultra-high-density rack heat and achieve PUE 1.25.</div>
+      </td>
+        </tr>
+      
+        <tr>
+          <td class="fac-cat"><strong>Building / Civil</strong></td>
+          <td class="fac-num ">$7.2M</td>
+          <td class="fac-num fac-active">$3.6M</td>
+          <td class="fac-num"><span class="fac-diff save">-50%</span></td>
+          <td class="fac-note">
+        <div class="fac-note-head">[Details]</div>
+        <ul class="fac-detail-list"><li>High-load slab reinforcement (1,000-1,500 kg/m²+)</li><li>Access floor, insulation and waterproofing</li><li>Loading dock and intake structures</li></ul>
+        <div class="fac-cost-label save">[Cost saving]</div>
+        <div class="fac-logic">Existing frame 100% reused. Excavation/facade work omitted; only pure load reinforcement (3,000 kg/m²) and access-floor construction applied.</div>
+      </td>
+        </tr>
+      
+        <tr>
+          <td class="fac-cat"><strong>Telecom / Fire / Security</strong></td>
+          <td class="fac-num ">$1.8M</td>
+          <td class="fac-num fac-active">$1.8M</td>
+          <td class="fac-num"><span class="fac-diff same">Same</span></td>
+          <td class="fac-note">
+        <div class="fac-note-head">[Details]</div>
+        <ul class="fac-detail-list"><li>Fiber trays and Meet-Me-Room (MMR)</li><li>Gas fire suppression (IG-541, Novec) and VESDA early detection</li><li>Access control, CCTV, DCIM</li></ul>
+        <div class="fac-cost-label same">[Identical (100%)]</div>
+        <div class="fac-logic">Essential data-center safety systems (gas fire suppression, early fire detection, fiber infrastructure) applied identically.</div>
+      </td>
+        </tr>
+      
+        <tr>
+          <td class="fac-cat"><strong>Design / Supervision / Overhead</strong></td>
+          <td class="fac-num ">$3.5M</td>
+          <td class="fac-num fac-active">$1.8M</td>
+          <td class="fac-num"><span class="fac-diff save">-49%</span></td>
+          <td class="fac-note">
+        <div class="fac-note-head">[Details]</div>
+        <ul class="fac-detail-list"><li>Concept, basic and detailed design</li><li>Project/construction management (PM/CM) and supervision</li><li>Permits and contingency</li></ul>
+        <div class="fac-cost-label save">[Cost saving]</div>
+        <div class="fac-logic">Large-scale construction permitting is skipped and engineering-service rates scale down with the reduced total construction cost.</div>
+      </td>
+        </tr>
+      
+                <tr class="fac-total">
+                  <td><strong>Total CAPEX</strong></td>
+                  <td class="fac-num "><strong>$23.3M</strong></td>
+                  <td class="fac-num fac-active"><strong>$18.0M</strong></td>
+                  <td class="fac-num"><span class="fac-diff save">-23%</span></td>
+                  <td class="fac-note"><div class="fac-logic">Remodeling saves $5.3M (~23%) versus new-build ($23.3M).</div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      
+          
+        <section class="panel table-panel">
+          <div class="panel-head">
+            <div>
+              <h2>Yearly Revenue Structure</h2>
+              <p>Table of yearly revenue, expense, P&amp;L and cumulative P&amp;L.</p>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Annual Revenue</th>
+                  <th>Annual Expense</th>
+                  <th>Annual P&amp;L</th>
+                  <th>Cum. Revenue</th>
+                  <th>Cum. Expense</th>
+                  <th>Cum. P&amp;L</th>
+                  <th>Annual Margin</th>
+                </tr>
+              </thead>
+              <tbody>
+          <tr>
+            <td><strong>Year 1</strong></td>
+            <td>$126.1M</td>
+            <td>$122.9M</td>
+            <td class="text-success">$3.2M</td>
+            <td>$126.1M</td>
+            <td>$122.9M</td>
+            <td class="text-success"><strong>$3.2M</strong></td>
+            <td>2.5%</td>
+          </tr>
+        
+          <tr>
+            <td><strong>Year 2</strong></td>
+            <td>$189.2M</td>
+            <td>$53.2M</td>
+            <td class="text-success">$136.0M</td>
+            <td>$315.4M</td>
+            <td>$176.1M</td>
+            <td class="text-success"><strong>$139.2M</strong></td>
+            <td>71.9%</td>
+          </tr>
+        
+          <tr>
+            <td><strong>Year 3</strong></td>
+            <td>$168.2M</td>
+            <td>$78.8M</td>
+            <td class="text-success">$89.4M</td>
+            <td>$483.6M</td>
+            <td>$254.9M</td>
+            <td class="text-success"><strong>$228.6M</strong></td>
+            <td>53.2%</td>
+          </tr>
+        </tbody>
+            </table>
+          </div>
+        </section>
+      
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const EOK = 100000000;
+    const HOURS = 8760;
+    const YEARS = 3;
+
+    const RACK_KEYS = ['gb200', 'gb300', 'veraRubin'];
+    const RACK_COUNT_KEY = {
+      gb200: 'racks_gb200',
+      gb300: 'racks_gb300',
+      veraRubin: 'racks_vr'
+    };
+
+    const RACK_DEFAULTS = {
+      gb200: {
+        label: 'GB200 NVL72',
+        shortLabel: 'GB200',
+        processorText: '36 Grace CPU + 72 Blackwell GPU',
+        gpusPerRack: 72,
+        rackPowerKw: 120,
+        rackPriceUsd: 3000000,
+        gpuHourlyRate: 20000,
+        fp4Pflops: 1440,
+        color: 'var(--gb200-color)'
+      },
+      gb300: {
+        label: 'GB300 NVL72',
+        shortLabel: 'GB300',
+        processorText: '36 Grace CPU + 72 Blackwell Ultra GPU',
+        gpusPerRack: 72,
+        rackPowerKw: 140,
+        rackPriceUsd: 4000000,
+        gpuHourlyRate: 31500,
+        fp4Pflops: 2160,
+        color: 'var(--gb300-color)'
+      },
+      veraRubin: {
+        label: 'Vera Rubin NVL72',
+        shortLabel: 'Vera Rubin',
+        processorText: '36 Vera CPU + 72 Rubin GPU',
+        gpusPerRack: 72,
+        rackPowerKw: 190,
+        rackPriceUsd: 7800000,
+        gpuHourlyRate: 50000,
+        fp4Pflops: 3600,
+        color: 'var(--vr-color)'
+      }
+    };
+
+    const DEFAULTS = {
+      activeView: 'gpu',
+      selectedRack: 'veraRubin',
+      utilY1: 60,
+      utilY2: 90,
+      utilY3: 80,
+      totalPowerKw: 2500,
+      itPowerKw: 2000,
+      facilityCapexEok: 270,
+      energyCostRate: 121.7,
+      basicChargeKwMonth: 9810,
+      fxKrwUsd: 1500,
+      depY1: 33,
+      depY2: 66,
+      depY3: 99,
+      colocationFeeKwMonth: 130000,
+      electricSaleRate: 170.1,
+      constructionType: 'remodel'
+    };
+
+    // CAPEX facility cost <new-build vs. remodel cost table> - unit: eok (100M KRW)
+    const FACILITY_CAPEX = {
+      categories: [
+        {
+          key: 'electrical', label: 'Electrical', newbuild: 94.5, remodel: 94.5,
+          details: ['Switchgear, transformers, redundant UPS', 'Emergency generators, ATS/CTTS, battery banks', 'Feeder cables and busbars'],
+          costLabel: 'Identical (100%)',
+          logic: 'Core equipment (2.5 MW HV switchgear, UPS, batteries) is deployed at identical capacity regardless of new-build vs. remodel.'
+        },
+        {
+          key: 'mechanical', label: 'HVAC / Cooling', newbuild: 67.5, remodel: 67.5,
+          details: ['High-efficiency chillers, cooling towers, CRAH units', 'Direct liquid cooling (DLC) CDUs and piping', 'Free-cooling system and containment'],
+          costLabel: 'Identical (100%)',
+          logic: 'Full DLC (liquid cooling) system to control ultra-high-density rack heat and achieve PUE 1.25.'
+        },
+        {
+          key: 'architecture', label: 'Building / Civil', newbuild: 108.0, remodel: 54.0,
+          details: ['High-load slab reinforcement (1,000-1,500 kg/m²+)', 'Access floor, insulation and waterproofing', 'Loading dock and intake structures'],
+          costLabel: 'Cost saving',
+          logic: 'Existing frame 100% reused. Excavation/facade work omitted; only pure load reinforcement (3,000 kg/m²) and access-floor construction applied.'
+        },
+        {
+          key: 'lowVoltage', label: 'Telecom / Fire / Security', newbuild: 27.0, remodel: 27.0,
+          details: ['Fiber trays and Meet-Me-Room (MMR)', 'Gas fire suppression (IG-541, Novec) and VESDA early detection', 'Access control, CCTV, DCIM'],
+          costLabel: 'Identical (100%)',
+          logic: 'Essential data-center safety systems (gas fire suppression, early fire detection, fiber infrastructure) applied identically.'
+        },
+        {
+          key: 'softCosts', label: 'Design / Supervision / Overhead', newbuild: 53.0, remodel: 27.0,
+          details: ['Concept, basic and detailed design', 'Project/construction management (PM/CM) and supervision', 'Permits and contingency'],
+          costLabel: 'Cost saving',
+          logic: 'Large-scale construction permitting is skipped and engineering-service rates scale down with the reduced total construction cost.'
+        }
+      ]
+    };
+    const CONSTRUCTION_LABEL = { newbuild: 'New-build', remodel: 'Remodel', custom: 'Custom' };
+
+    // Per-year utilization scenario notes (for hover popup)
+    const UTIL_NOTES = {
+      1: 'Reflects initial setup and ramp-up period',
+      2: 'Stabilization and AI-training demand surge (peak)',
+      3: 'Conservative decline begins as next-gen chipsets arrive'
+    };
+
+    function facilitySumEok(type) {
+      return FACILITY_CAPEX.categories.reduce((sum, c) => sum + (type === 'newbuild' ? c.newbuild : c.remodel), 0);
+    }
+    function facilityDiffPct(c) {
+      if (c.newbuild <= 0 || Math.abs(c.newbuild - c.remodel) < 0.05) return null;
+      return -(1 - c.remodel / c.newbuild) * 100;
+    }
+    function deriveConstructionType(value) {
+      if (Math.abs(value - facilitySumEok('newbuild')) < 0.5) return 'newbuild';
+      if (Math.abs(value - facilitySumEok('remodel')) < 0.5) return 'remodel';
+      return 'custom';
+    }
+    function getUtilizations(inputState = state) {
+      return [inputState.utilY1, inputState.utilY2, inputState.utilY3].map(v => (Number(v) || 0) / 100);
+    }
+    function utilAvgPct(inputState = state) {
+      const arr = [inputState.utilY1, inputState.utilY2, inputState.utilY3].map(v => Number(v) || 0);
+      return arr.reduce((a, b) => a + b, 0) / arr.length;
+    }
+
+    const controlGroups = [
+      {
+        title: 'Common Power & Ops Basis',
+        scope: 'Both models',
+        views: ['gpu', 'colo', 'compare'],
+        controls: [
+          { id: 'utilYears', label: 'Target Utilization', type: 'utilYears' },
+          { id: 'totalPowerKw', label: 'Total Power Capacity', suffix: 'kW', min: 1, max: 30000, step: 10, digits: 0, numberOnly: true },
+          { id: 'itPowerKw', label: 'IT Power Capacity', suffix: 'kW', min: 1, max: 20000, step: 10, digits: 0, numberOnly: true },
+          { id: 'constructionType', label: 'Facility Type (New-build / Remodel)', type: 'segmented', options: [{ value: 'newbuild', label: 'New-build' }, { value: 'remodel', label: 'Remodel' }] },
+          { id: 'facilityCapexEok', label: 'Facility CAPEX', currency: 'usdM', min: 0, max: 1000, step: 10, digits: 0, usdMin: 0, usdMax: 70, usdStep: 0.5 },
+          { id: 'energyCostRate', label: 'Energy Charge Rate', currency: 'usdKwh', min: 50, max: 300, step: 0.1, digits: 1, usdMin: 0.03, usdMax: 0.25, usdStep: 0.001 },
+          { id: 'basicChargeKwMonth', label: 'Basic Electricity Charge', currency: 'usdKwMo', min: 0, max: 30000, step: 100, digits: 0, usdMin: 0, usdMax: 25, usdStep: 0.05 }
+        ]
+      },
+      {
+        title: 'GPUaaS Settings',
+        scope: 'GPU model',
+        views: ['gpu', 'compare'],
+        controls: [
+          { id: 'fxKrwUsd', label: 'FX Rate', suffix: ' KRW/USD', min: 1000, max: 1800, step: 10, digits: 0 },
+          { id: 'depY1', label: 'Year 1 Depreciation', suffix: '%', min: 0, max: 100, step: 1, digits: 0, numberOnly: true },
+          { id: 'depY2', label: 'Year 2 Depreciation', suffix: '%', min: 0, max: 100, step: 1, digits: 0, numberOnly: true },
+          { id: 'depY3', label: 'Year 3 Depreciation', suffix: '%', min: 0, max: 100, step: 1, digits: 0, numberOnly: true }
+        ]
+      },
+      {
+        title: 'Colocation Settings',
+        scope: 'Colocation model',
+        views: ['colo'],
+        controls: [
+          { id: 'colocationFeeKwMonth', label: 'Colocation Rate', currency: 'usdKwMo', min: 50000, max: 300000, step: 5000, digits: 0, usdMin: 20, usdMax: 200, usdStep: 0.5 },
+          { id: 'electricSaleRate', label: 'Electricity Resale Rate', currency: 'usdKwh', min: 80, max: 300, step: 0.1, digits: 1, usdMin: 0.05, usdMax: 0.25, usdStep: 0.001 }
+        ]
+      }
+    ];
+
+    let rackTypes = cloneRacks(RACK_DEFAULTS);
+    let state = {
+      ...DEFAULTS,
+      racks_gb200: 0,
+      racks_gb300: 0,
+      racks_vr: 0
+    };
+
+    const nf = new Intl.NumberFormat('ko-KR');
+    const nf1 = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 1, minimumFractionDigits: 0 });
+    const nf2 = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 2, minimumFractionDigits: 0 });
+    const nf4 = new Intl.NumberFormat('en-US', { maximumFractionDigits: 4, minimumFractionDigits: 2 });
+    const nfUsdM = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 });
+
+    // ---- Currency conversion layer (model stays in KRW/eok; display -> USD via scenario FX) ----
+    function currentFx() { return Number(state.fxKrwUsd) || DEFAULTS.fxKrwUsd; }
+    function krwToUsd(krwValue) { return (Number(krwValue) || 0) / currentFx(); }
+    function usdToKrw(usdValue) { return (Number(usdValue) || 0) * currentFx(); }
+    function eokToUsdM(eokValue) { return (Number(eokValue) || 0) * EOK / currentFx() / 1e6; } // eok (100M KRW) -> $M
+    function usdMToEok(usdM) { return (Number(usdM) || 0) * 1e6 * currentFx() / EOK; }          // $M -> eok
+    function fmtUsdM(m) {
+      const abs = Math.abs(m);
+      const body = abs >= 1000 ? nf.format(Math.round(abs)) : nfUsdM.format(abs);
+      return `${m < 0 ? '-' : ''}$${body}M`;
+    }
+    function usdPerKwh(krwRate) { return `$${nf4.format(krwToUsd(krwRate))}/kWh`; }
+    function usdPerKwMo(krwRate) { return `$${nf2.format(krwToUsd(krwRate))}/kW·mo`; }
+    function usdPerHr(krwRate) { return `$${nf2.format(krwToUsd(krwRate))}/hr`; }
+    // Display value (numeric) for an editable currency control, given its KRW/eok state value.
+    function ctrlDisp(def, v) {
+      if (def.currency === 'usdKwh') return Math.round(krwToUsd(v) * 10000) / 10000;
+      if (def.currency === 'usdKwMo') return Math.round(krwToUsd(v) * 100) / 100;
+      if (def.currency === 'usdM') return Math.round(eokToUsdM(v) * 100) / 100;
+      return v;
+    }
+    // Convert a USD control value back to the model's KRW/eok state value.
+    function ctrlToState(def, usdVal) {
+      if (def.currency === 'usdKwh' || def.currency === 'usdKwMo') return usdToKrw(usdVal);
+      if (def.currency === 'usdM') return usdMToEok(usdVal);
+      return usdVal;
+    }
+    function ctrlRange(def) {
+      if (def.currency) return { min: def.usdMin, max: def.usdMax, step: def.usdStep };
+      return { min: def.min, max: def.max, step: def.step };
+    }
+
+    function cloneRacks(source) {
+      return Object.fromEntries(Object.entries(source).map(([key, value]) => [key, { ...value }]));
+    }
+
+    function getControlDef(id) {
+      for (const group of controlGroups) {
+        const found = group.controls.find(control => control.id === id);
+        if (found) return found;
+      }
+      return null;
+    }
+
+    function pct(value, digits = 1) {
+      return `${new Intl.NumberFormat('ko-KR', { maximumFractionDigits: digits, minimumFractionDigits: 0 }).format(value)}%`;
+    }
+
+    function eok(value) {
+      return fmtUsdM(eokToUsdM(value));
+    }
+
+    function eokAxis(value) {
+      return fmtUsdM(eokToUsdM(value));
+    }
+
+    function usd(value) {
+      return `$${nf.format(Math.round(value))}`;
+    }
+
+    function krw(value) {
+      return `$${nf.format(Math.round(krwToUsd(value)))}`;
+    }
+
+    // value passed in is a KRW amount (rackPriceUsd * fx); show its USD equivalent in $M.
+    function formatKrwAmount(value) {
+      return `≈ $${nf1.format(krwToUsd(value) / 1e6)}M`;
+    }
+
+    function getPue(inputState = state) {
+      const itPower = Number(inputState.itPowerKw) || 0;
+      const totalPower = Number(inputState.totalPowerKw) || 0;
+      return itPower > 0 ? totalPower / itPower : 0;
+    }
+
+    function formatPue(inputState = state) {
+      return nf2.format(getPue(inputState));
+    }
+
+    function getDepreciationRates(inputState = state) {
+      return Array.from({ length: YEARS }, (_, index) => Number(inputState[`depY${index + 1}`] || 0));
+    }
+
+    function getDepreciationText(inputState = state) {
+      return getDepreciationRates(inputState).map(value => nf.format(value)).join('/');
+    }
+
+    function formatControlValue(id, value) {
+      const def = getControlDef(id);
+      if (!def) return nf.format(value);
+      if (def.currency === 'usdKwh') return usdPerKwh(value);
+      if (def.currency === 'usdKwMo') return usdPerKwMo(value);
+      if (def.currency === 'usdM') return fmtUsdM(eokToUsdM(value));
+      const formatter = new Intl.NumberFormat('en-US', {
+        maximumFractionDigits: def.digits ?? 0,
+        minimumFractionDigits: def.digits === 2 ? 2 : 0
+      });
+      return `${formatter.format(value)}${def.suffix}`;
+    }
+
+    function getCountFromState(inputState, key) {
+      return Number(inputState[RACK_COUNT_KEY[key]] || 0);
+    }
+
+    function setCountForState(inputState, key, value) {
+      inputState[RACK_COUNT_KEY[key]] = Math.max(0, Math.floor(Number(value) || 0));
+    }
+
+    function clearRackCounts(inputState = state) {
+      RACK_KEYS.forEach(key => setCountForState(inputState, key, 0));
+    }
+
+    function calcUsedItPower(inputState = state, inputRacks = rackTypes) {
+      return RACK_KEYS.reduce((sum, key) => sum + getCountFromState(inputState, key) * inputRacks[key].rackPowerKw, 0);
+    }
+
+    function getNonZeroRackKeys(inputState = state) {
+      return RACK_KEYS.filter(key => getCountFromState(inputState, key) > 0);
+    }
+
+    function isPureSelectedMix(inputState = state) {
+      const keys = getNonZeroRackKeys(inputState);
+      return keys.length === 0 || (keys.length === 1 && keys[0] === inputState.selectedRack);
+    }
+
+    function fillSelectedRack(inputState = state, inputRacks = rackTypes, key = inputState.selectedRack) {
+      inputState.selectedRack = key;
+      clearRackCounts(inputState);
+      setCountForState(inputState, key, Math.floor(inputState.itPowerKw / inputRacks[key].rackPowerKw));
+    }
+
+    function maxCountForRack(key) {
+      return Math.floor(state.itPowerKw / rackTypes[key].rackPowerKw);
+    }
+
+    function enforcePowerCap(changedKey = null) {
+      const cap = state.itPowerKw;
+      let total = calcUsedItPower();
+
+      if (total <= cap) return;
+
+      const reduceOrder = RACK_KEYS
+        .filter(key => key !== changedKey)
+        .sort((a, b) => {
+          const aSelected = a === state.selectedRack ? 1 : 0;
+          const bSelected = b === state.selectedRack ? 1 : 0;
+          return aSelected - bSelected;
+        });
+
+      if (changedKey && RACK_KEYS.includes(changedKey)) reduceOrder.push(changedKey);
+
+      reduceOrder.forEach(key => {
+        if (total <= cap) return;
+        const count = getCountFromState(state, key);
+        if (count <= 0) return;
+        const excess = total - cap;
+        const drop = Math.min(count, Math.ceil(excess / rackTypes[key].rackPowerKw));
+        setCountForState(state, key, count - drop);
+        total = calcUsedItPower();
+      });
+    }
+
+    function handleItPowerChange() {
+      if (isPureSelectedMix()) {
+        fillSelectedRack(state, rackTypes, state.selectedRack);
+      } else {
+        enforcePowerCap();
+      }
+    }
+
+    function applyConstructionType(type) {
+      state.constructionType = type;
+      state.facilityCapexEok = facilitySumEok(type);
+      buildControls();
+      render();
+    }
+
+    function buildControls() {
+      const root = document.getElementById('controlsRoot');
+      root.innerHTML = controlGroups.map(group => `
+        <section class="control-group" data-views="${group.views.join(',')}" data-scope="${group.scope}">
+          <h3>${group.title}</h3>
+          ${group.controls.map(def => {
+            const current = state[def.id];
+            const base = DEFAULTS[def.id];
+            if (def.type === 'utilYears') {
+              const savings = -(1 - facilitySumEok('remodel') / facilitySumEok('newbuild')) * 100;
+              return `
+                <div class="control-item">
+                  <div class="control-meta">
+                    <label>${def.label} <span class="util-hint-icon" title="Hover over each year for details">ⓘ</span></label>
+                    <span class="control-value" data-util-avg>3-yr avg ${nf.format(Math.round(utilAvgPct()))}%</span>
+                  </div>
+                  <div class="util-years">
+                    ${[1, 2, 3].map(y => `
+                      <div class="util-year" data-util-year="${y}">
+                        <span class="util-year-label">Year ${y}</span>
+                        <div class="util-year-field">
+                          <input type="number" min="0" max="100" step="1" value="${state['utilY' + y]}" data-input="utilY${y}" aria-label="Year ${y} utilization" />
+                          <span class="util-year-suffix">%</span>
+                        </div>
+                      </div>
+                    `).join('')}
+                  </div>
+                  <div class="base-hint">Year 1 ramp-up 60% · Year 2 peak 90% · Year 3 conservative decline 80% (per-year utilization scenario)</div>
+                </div>
+              `;
+            }
+            if (def.type === 'segmented') {
+              return `
+                <div class="control-item">
+                  <div class="control-meta">
+                    <label>${def.label}</label>
+                    <span class="control-value" data-construction-badge>${CONSTRUCTION_LABEL[state[def.id]] || 'Custom'}</span>
+                  </div>
+                  <div class="segmented" role="group" aria-label="${def.label}">
+                    ${def.options.map(opt => `
+                      <button type="button" class="segmented-btn ${state[def.id] === opt.value ? 'active' : ''}" data-construction="${opt.value}">${opt.label}</button>
+                    `).join('')}
+                  </div>
+                  <div class="base-hint">New-build ${fmtUsdM(eokToUsdM(facilitySumEok('newbuild')))} · Remodel ${fmtUsdM(eokToUsdM(facilitySumEok('remodel')))} (remodel saves ~${nf.format(Math.round((1 - facilitySumEok('remodel') / facilitySumEok('newbuild')) * 100))}% vs new-build)</div>
+                </div>
+              `;
+            }
+            if (def.numberOnly) {
+              return `
+                <div class="control-item">
+                  <div class="control-meta">
+                    <label for="control_${def.id}">${def.label}</label>
+                    <div class="control-value-wrap">
+                      <span class="control-value" data-control-badge="${def.id}">${formatControlValue(def.id, current)}</span>
+                      ${def.id === 'itPowerKw' ? `<span class="control-value pue-readonly" data-pue-badge>PUE ${formatPue()}</span>` : ''}
+                    </div>
+                  </div>
+                  <input id="control_${def.id}" type="number" min="${ctrlRange(def).min}" max="${ctrlRange(def).max}" step="${ctrlRange(def).step}" value="${ctrlDisp(def, current)}" data-input="${def.id}" data-currency="${def.currency || ''}" />
+                  <div class="base-hint">Report default: ${formatControlValue(def.id, base)}</div>
+                </div>
+              `;
+            }
+            return `
+              <div class="control-item">
+                <div class="control-meta">
+                  <label for="control_${def.id}_range">${def.label}</label>
+                  <div class="control-value-wrap">
+                    <span class="control-value" data-control-badge="${def.id}">${formatControlValue(def.id, current)}</span>
+                    ${def.id === 'itPowerKw' ? `<span class="control-value pue-readonly" data-pue-badge>PUE ${formatPue()}</span>` : ''}
+                  </div>
+                </div>
+                <div class="control-field">
+                  <input id="control_${def.id}_range" type="range" min="${ctrlRange(def).min}" max="${ctrlRange(def).max}" step="${ctrlRange(def).step}" value="${ctrlDisp(def, current)}" data-input="${def.id}" data-currency="${def.currency || ''}" />
+                  <input type="number" min="${ctrlRange(def).min}" max="${ctrlRange(def).max}" step="${ctrlRange(def).step}" value="${ctrlDisp(def, current)}" data-input="${def.id}" data-currency="${def.currency || ''}" aria-label="${def.label}" />
+                </div>
+                <div class="base-hint">Report default: ${formatControlValue(def.id, base)}</div>
+              </div>
+            `;
+          }).join('')}
+        </section>
+      `).join('');
+      refreshControlVisibility();
+    }
+
+    function refreshControls() {
+      document.querySelectorAll('[data-input]').forEach(input => {
+        const id = input.dataset.input;
+        if (state[id] !== undefined && document.activeElement !== input) {
+          const def = getControlDef(id);
+          input.value = (def && def.currency) ? ctrlDisp(def, state[id]) : state[id];
+        }
+      });
+      document.querySelectorAll('[data-control-badge]').forEach(badge => {
+        const id = badge.dataset.controlBadge;
+        badge.textContent = formatControlValue(id, state[id]);
+      });
+      document.querySelectorAll('[data-pue-badge]').forEach(badge => {
+        badge.textContent = `PUE ${formatPue()}`;
+      });
+      document.querySelectorAll('[data-construction]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.construction === state.constructionType);
+      });
+      document.querySelectorAll('[data-construction-badge]').forEach(badge => {
+        badge.textContent = CONSTRUCTION_LABEL[state.constructionType] || 'Custom';
+      });
+      document.querySelectorAll('[data-util-avg]').forEach(badge => {
+        badge.textContent = `3-yr avg ${nf.format(Math.round(utilAvgPct()))}%`;
+      });
+    }
+
+    function refreshControlVisibility() {
+      let firstVisible = null;
+      document.querySelectorAll('.control-group').forEach(group => {
+        const views = group.dataset.views.split(',');
+        const visible = views.includes(state.activeView);
+        group.style.display = visible ? 'block' : 'none';
+        if (visible && !firstVisible) firstVisible = group;
+      });
+      const currentGroup = firstVisible;
+      document.getElementById('controlModeLabel').textContent = currentGroup ? currentGroup.querySelector('h3').textContent : 'Inputs';
+      document.getElementById('controlScopeBadge').textContent = currentGroup ? currentGroup.dataset.scope : 'Baseline';
+    }
+
+    function refreshTabs() {
+      document.querySelectorAll('[data-view]').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.view === state.activeView);
+      });
+    }
+
+    function calcGpu(inputState = state, inputRacks = rackTypes) {
+      const utils = getUtilizations(inputState);
+      const revenueByRack = {};
+      const capexByRack = {};
+      const counts = {};
+      let annualRevenueEok100 = 0;
+      let itCapexEok = 0;
+      let usedItPower = 0;
+      let totalGpu = 0;
+      let totalFp4 = 0;
+
+      RACK_KEYS.forEach(key => {
+        const rack = inputRacks[key];
+        const count = getCountFromState(inputState, key);
+        counts[key] = count;
+        const revenue100 = count * rack.gpusPerRack * HOURS * rack.gpuHourlyRate / EOK;
+        const capex = count * rack.rackPriceUsd * inputState.fxKrwUsd / EOK;
+        revenueByRack[key] = revenue100;
+        capexByRack[key] = capex;
+        annualRevenueEok100 += revenue100;
+        itCapexEok += capex;
+        usedItPower += count * rack.rackPowerKw;
+        totalGpu += count * rack.gpusPerRack;
+        totalFp4 += count * rack.fp4Pflops;
+      });
+
+      const idleKw = inputState.itPowerKw - usedItPower;
+      const pue = getPue(inputState);
+      const totalPowerKw = inputState.totalPowerKw;
+      const baseEok = totalPowerKw * inputState.basicChargeKwMonth * 12 / EOK;
+      const energyEok100 = usedItPower * pue * HOURS * inputState.energyCostRate / EOK;
+      const depRates = getDepreciationRates(inputState).map(value => value / 100);
+
+      const annualRevenue = utils.map(u => annualRevenueEok100 * u);
+      const energyByYear = utils.map(u => energyEok100 * u);
+      const electricityByYear = energyByYear.map(e => baseEok + e);
+      const annualExpense = utils.map((u, index) => {
+        const initialCapex = index === 0 ? itCapexEok + inputState.facilityCapexEok : 0;
+        return initialCapex + electricityByYear[index] + (itCapexEok * depRates[index]);
+      });
+
+      let sumR = 0;
+      let sumE = 0;
+      const cumRevenue = annualRevenue.map(value => (sumR += value));
+      const cumExpense = annualExpense.map(value => (sumE += value));
+      const cumProfit = cumRevenue.map((value, index) => value - cumExpense[index]);
+
+      const energyEok = energyByYear.reduce((a, b) => a + b, 0) / YEARS;
+      const electricityEok = baseEok + energyEok;
+
+      return {
+        key: 'gpu',
+        counts,
+        revenueByRack,
+        capexByRack,
+        annualRevenue,
+        annualExpense,
+        cumRevenue,
+        cumExpense,
+        cumProfit,
+        electricityByYear,
+        usedItPower,
+        idleKw,
+        totalPowerKw,
+        pue,
+        baseEok,
+        energyEok,
+        electricityEok,
+        itCapexEok,
+        totalGpu,
+        totalFp4,
+        utils,
+        allocationPct: inputState.itPowerKw ? usedItPower / inputState.itPowerKw * 100 : 0
+      };
+    }
+
+    function calcColo(inputState = state) {
+      const utils = getUtilizations(inputState);
+      const pue = getPue(inputState);
+      const totalPowerKw = inputState.totalPowerKw;
+      const colocationRevenueEok = inputState.itPowerKw * inputState.colocationFeeKwMonth * 12 / EOK;
+      const electricRevenue100 = totalPowerKw * HOURS * inputState.electricSaleRate / EOK;
+      const baseEok = totalPowerKw * inputState.basicChargeKwMonth * 12 / EOK;
+      const energyEok100 = totalPowerKw * HOURS * inputState.energyCostRate / EOK;
+
+      const annualRevenue = utils.map(u => colocationRevenueEok + electricRevenue100 * u);
+      const energyByYear = utils.map(u => energyEok100 * u);
+      const electricityByYear = energyByYear.map(e => baseEok + e);
+      const annualExpense = utils.map((u, index) => {
+        const initialCapex = index === 0 ? inputState.facilityCapexEok : 0;
+        return initialCapex + electricityByYear[index];
+      });
+
+      let sumR = 0;
+      let sumE = 0;
+      const cumRevenue = annualRevenue.map(value => (sumR += value));
+      const cumExpense = annualExpense.map(value => (sumE += value));
+      const cumProfit = cumRevenue.map((value, index) => value - cumExpense[index]);
+
+      const energyEok = energyByYear.reduce((a, b) => a + b, 0) / YEARS;
+      const electricityEok = baseEok + energyEok;
+      const electricRevenueEok = electricRevenue100 * (utils.reduce((a, b) => a + b, 0) / YEARS);
+
+      return {
+        key: 'colo',
+        annualRevenue,
+        annualExpense,
+        cumRevenue,
+        cumExpense,
+        cumProfit,
+        electricityByYear,
+        totalPowerKw,
+        pue,
+        colocationRevenueEok,
+        electricRevenueEok,
+        baseEok,
+        energyEok,
+        electricityEok,
+        utils
+      };
+    }
+
+    function makeBaselineState() {
+      const baseline = {
+        ...DEFAULTS,
+        racks_gb200: 0,
+        racks_gb300: 0,
+        racks_vr: 0
+      };
+      fillSelectedRack(baseline, RACK_DEFAULTS, 'veraRubin');
+      return baseline;
+    }
+
+    function getBaselineData(view) {
+      const baselineState = makeBaselineState();
+      return view === 'colo' ? calcColo(baselineState) : calcGpu(baselineState, RACK_DEFAULTS);
+    }
+
+    function getActiveData() {
+      return state.activeView === 'colo' ? calcColo() : calcGpu();
+    }
+
+    function getBreakEvenText(data) {
+      const index = data.cumProfit.findIndex(value => value >= 0);
+      return index >= 0 ? `BEP Year ${index + 1}` : `No BEP within ${YEARS} years`;
+    }
+
+    function rackMixText(inputState = state) {
+      const parts = RACK_KEYS
+        .map(key => {
+          const count = getCountFromState(inputState, key);
+          return count > 0 ? `${rackTypes[key].shortLabel} ${count} units` : '';
+        })
+        .filter(Boolean);
+      return parts.length ? parts.join(' + ') : 'No rack selected';
+    }
+
+    function renderHero(gpuData) {
+      // The current-rack profile panel in the title area was removed, so nothing is rendered here.
+    }
+
+    function renderCards(data) {
+      const root = document.getElementById('summaryCards');
+      const baseline = getBaselineData(state.activeView === 'colo' ? 'colo' : 'gpu');
+      const delta = data.annualRevenue[0] - baseline.annualRevenue[0];
+      const profit = data.cumProfit[YEARS - 1];
+      const deltaText = `${delta >= 0 ? '+' : ''}${eok(delta)}`;
+      const revenueHint = state.activeView === 'colo'
+        ? `Colocation ${eok(data.colocationRevenueEok)} + Electricity ${eok(data.electricRevenueEok)}`
+        : `${deltaText} vs report default`;
+      const cumulativeHint = state.activeView === 'colo'
+        ? `Total power ${nf.format(state.totalPowerKw)}kW · IT power ${nf.format(state.itPowerKw)}kW · PUE ${formatPue()}`
+        : `${rackMixText()} · ${nf.format(Math.round(data.totalFp4))} PFLOPS total`;
+      const expenseHint = data.key === 'gpu'
+        ? `IT CAPEX ${eok(data.itCapexEok)} + Facility ${eok(state.facilityCapexEok)}`
+        : `Facility CAPEX ${eok(state.facilityCapexEok)} + Electricity ${eok(data.electricityEok)}`;
+      const profitHint = `${getBreakEvenText(data)} · ${data.cumRevenue[YEARS - 1] ? pct(profit / data.cumRevenue[YEARS - 1] * 100, 1) : '0%'} of cumulative revenue `;
+
+      root.innerHTML = `
+        <article class="summary-card">
+          <span class="label">Annual Revenue</span>
+          <div class="value text-primary">${eok(data.annualRevenue[0])}</div>
+          <div class="hint">${revenueHint}</div>
+        </article>
+        <article class="summary-card">
+          <span class="label">${YEARS}-yr Cumulative Revenue</span>
+          <div class="value text-primary">${eok(data.cumRevenue[YEARS - 1])}</div>
+          <div class="hint">${cumulativeHint}</div>
+        </article>
+        <article class="summary-card">
+          <span class="label">${YEARS}-yr Cumulative Expense</span>
+          <div class="value">${eok(data.cumExpense[YEARS - 1])}</div>
+          <div class="hint">${expenseHint}</div>
+        </article>
+        <article class="summary-card">
+          <span class="label">${YEARS}-yr Cumulative P&L</span>
+          <div class="value ${profit >= 0 ? 'text-success' : 'text-danger'}">${eok(profit)}</div>
+          <div class="hint">${profitHint}</div>
+        </article>
+      `;
+    }
+
+    function renderRackSelector(data) {
+      return `
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Rack System Selection</h2>
+              <p>Default power, price and performance are taken from the report's GB200 · GB300 · Vera Rubin comparison. Click a card to auto-place the maximum number of that rack within the IT power budget.</p>
+            </div>
+            <button type="button" class="dark-pill" data-reset-selected>Re-apply selected rack defaults</button>
+          </div>
+          <div class="rack-card-grid">
+            ${RACK_KEYS.map(key => {
+              const rack = rackTypes[key];
+              const active = key === state.selectedRack ? 'active' : '';
+              const maxCount = Math.floor(state.itPowerKw / rack.rackPowerKw);
+              return `
+                <button type="button" class="rack-select-card ${active}" data-select-rack="${key}" style="--rack-color:${rack.color}">
+                  <span class="rack-kicker">NVL72 · max ${nf.format(maxCount)} units</span>
+                  <strong>${rack.label}</strong>
+                  <span class="rack-sub">${rack.processorText}</span>
+                  <div class="mini-specs">
+                    <span>Power / rack<b>${nf.format(rack.rackPowerKw)}kW</b></span>
+                    <span>Price / rack<b>${usd(rack.rackPriceUsd)}</b></span>
+                    <span>Base rate<b>${usdPerHr(rack.gpuHourlyRate)}</b></span>
+                    <span>FP4 perf.<b>${nf.format(rack.fp4Pflops)} PFLOPS</b></span>
+                  </div>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderRackAdjust(data) {
+      const usageWidth = Math.min(100, Math.max(0, data.allocationPct));
+      return `
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Adjust Rack Configuration</h2>
+              <p>Directly change rack count, price per rack, power per rack and GPU hourly rental rate. Counts are auto-capped so they never exceed the IT power budget.</p>
+            </div>
+          </div>
+          <div class="usage-strip">
+            <span>GPU rack power utilization</span>
+            <div class="meter"><span style="width:${usageWidth}%"></span></div>
+            <strong>${pct(data.allocationPct, 1)} (${nf.format(data.usedItPower)}kW / ${nf.format(state.itPowerKw)}kW)</strong>
+          </div>
+          <div class="rack-adjust-grid">
+            ${RACK_KEYS.map(key => {
+              const rack = rackTypes[key];
+              const count = getCountFromState(state, key);
+              const maxCount = maxCountForRack(key);
+              return `
+                <article class="rack-adjust-card" data-rack-card="${key}" style="--rack-color:${rack.color}">
+                  <div class="rack-adjust-title">
+                    <strong>${rack.shortLabel}</strong>
+                    <span class="count-chip">${nf.format(count)} units</span>
+                  </div>
+                  <div class="rack-count-control">
+                    <input type="range" min="0" max="${maxCount}" step="1" value="${count}" data-rack-count="${key}" />
+                    <input type="number" min="0" max="${maxCount}" step="1" value="${count}" data-rack-count="${key}" aria-label="${rack.shortLabel} rack count" />
+                  </div>
+                  <div class="spec-grid">
+                    <div class="spec-input">
+                      <label>Price / rack (USD)</label>
+                      <input type="number" min="0" step="1000" value="${rack.rackPriceUsd}" data-rack-key="${key}" data-rack-prop="rackPriceUsd" />
+                      <div class="krw-hint">${formatKrwAmount(rack.rackPriceUsd * state.fxKrwUsd)}</div>
+                    </div>
+                    <div class="spec-input">
+                      <label>Power / rack (kW)</label>
+                      <input type="number" min="1" step="1" value="${rack.rackPowerKw}" data-rack-key="${key}" data-rack-prop="rackPowerKw" />
+                    </div>
+                    <div class="spec-input">
+                      <label>GPU rental rate (USD/hr)</label>
+                      <input type="number" min="0" step="0.5" value="${Math.round(krwToUsd(rack.gpuHourlyRate) * 100) / 100}" data-rack-key="${key}" data-rack-prop="gpuHourlyRate" />
+                    </div>
+                  </div>
+                </article>
+              `;
+            }).join('')}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderChartPanel() {
+      return `
+        <section class="panel chart-panel">
+          <div class="panel-head">
+            <div>
+              <h2>${YEARS}-Year Cumulative Trend</h2>
+              <p>Compares cumulative revenue, expense and P&L on the same axis.</p>
+            </div>
+          </div>
+          <div class="chart-wrap" id="chartWrap"></div>
+          <div class="legend" id="legend"></div>
+        </section>
+      `;
+    }
+
+    function renderFormulaPanel(data) {
+      const isGpu = data.key === 'gpu';
+      const selected = rackTypes[state.selectedRack];
+      const usagePct = isGpu ? data.allocationPct : 100;
+      const usageText = isGpu
+        ? `GPU rack power utilization: ${pct(data.allocationPct, 1)} (${rackMixText()} / IT power ${nf.format(state.itPowerKw)}kW)`
+        : `Colocation billing basis: IT power ${nf.format(state.itPowerKw)}kW, total power ${nf.format(data.totalPowerKw)}kW (PUE ${nf2.format(data.pue)})`;
+      const headline = isGpu
+        ? `Current basis: selected rack is ${selected.label}, configured as ${rackMixText()}. Using ${nf.format(selected.rackPowerKw)}kW/rack, ${usd(selected.rackPriceUsd)}/rack, and a base rental rate of ${usdPerHr(selected.gpuHourlyRate)}, this yields annual revenue ${eok(data.annualRevenue[0])}, IT equipment CAPEX ${eok(data.itCapexEok)}, and electricity cost ${eok(data.electricityEok)}.`
+        : `Current basis: the colocation model uses IT power ${nf.format(state.itPowerKw)}kW, colocation rate ${usdPerKwMo(state.colocationFeeKwMonth)}, and electricity resale rate ${usdPerKwh(state.electricSaleRate)}, yielding annual revenue ${eok(data.annualRevenue[0])} and electricity cost ${eok(data.electricityEok)}.`;
+
+      return `
+        <section class="panel formula-panel">
+          <div class="panel-head">
+            <div>
+              <h2>Formulas & Basis</h2>
+              <p>See how inputs and rack base specs feed the revenue/expense formulas. GPU rental rate and rack specs are directly adjustable.</p>
+            </div>
+          </div>
+
+          <div class="basis-alert">
+            <p><strong>${headline}</strong></p>
+            <div class="usage-strip" style="margin:0; background:rgba(255,255,255,0.58); border-color:rgba(245,158,11,0.22)">
+              <span>${isGpu ? 'Power allocation status' : 'Colocation billing status'}</span>
+              <div class="meter"><span style="width:${Math.min(100, Math.max(0, usagePct))}%"></span></div>
+              <strong>${usageText}</strong>
+            </div>
+            <div class="basis-chips">
+              <span>Utilization ${nf.format(state.utilY1)}·${nf.format(state.utilY2)}·${nf.format(state.utilY3)}%</span>
+              <span>Total power ${nf.format(state.totalPowerKw)}kW</span>
+              <span>IT power ${nf.format(state.itPowerKw)}kW</span>
+              <span>PUE ${formatPue()}</span>
+              <span>Facility CAPEX ${eok(state.facilityCapexEok)}</span>
+              <span>Energy rate ${usdPerKwh(state.energyCostRate)}</span>
+              <span>Basic charge ${usdPerKwMo(state.basicChargeKwMonth)}</span>
+              ${isGpu ? `<span>FX ${nf.format(state.fxKrwUsd)} KRW/USD</span><span>Depreciation ${getDepreciationText()}%</span>` : `<span>Colocation rate ${usdPerKwMo(state.colocationFeeKwMonth)}</span><span>Electricity resale ${usdPerKwh(state.electricSaleRate)}</span>`}
+            </div>
+          </div>
+
+          <div class="formula-grid">
+            <article class="formula-card">
+              <h3>GPUaaS Annual Revenue</h3>
+              <p><code>Σ(rack count × GPUs per rack × 8,760 h × utilization × GPU hourly rate)</code></p>
+            </article>
+            <article class="formula-card">
+              <h3>Colocation Annual Revenue</h3>
+              <p><code>IT power (kW) × colocation rate × 12 months + total power (kW) × 8,760 h × utilization × electricity resale rate</code></p>
+            </article>
+            <article class="formula-card">
+              <h3>IT Equipment CAPEX</h3>
+              <p><code>Σ(rack count × rack price (USD) × FX)</code></p>
+            </article>
+            <article class="formula-card">
+              <h3>Electricity Cost</h3>
+              <p><code>total power (kW) × basic charge × 12 + used IT power (kW) × PUE × 8,760 h × utilization × energy rate</code></p>
+            </article>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderFacilityCapexPanel() {
+      const type = state.constructionType;
+      const newSum = facilitySumEok('newbuild');
+      const remodelSum = facilitySumEok('remodel');
+      const totalDiffPct = Math.round((1 - remodelSum / newSum) * 100);
+      const diffCell = c => {
+        const d = facilityDiffPct(c);
+        return d === null
+          ? `<span class="fac-diff same">Same</span>`
+          : `<span class="fac-diff save">${nf.format(Math.round(d))}%</span>`;
+      };
+      const noteCell = c => `
+        <div class="fac-note-head">[Details]</div>
+        <ul class="fac-detail-list">${c.details.map(d => `<li>${d}</li>`).join('')}</ul>
+        <div class="fac-cost-label ${c.costLabel === 'Identical (100%)' ? 'same' : 'save'}">[${c.costLabel}]</div>
+        <div class="fac-logic">${c.logic}</div>
+      `;
+      const rows = FACILITY_CAPEX.categories.map(c => `
+        <tr>
+          <td class="fac-cat"><strong>${c.label}</strong></td>
+          <td class="fac-num ${type === 'newbuild' ? 'fac-active' : ''}">${fmtUsdM(eokToUsdM(c.newbuild))}</td>
+          <td class="fac-num ${type === 'remodel' ? 'fac-active' : ''}">${fmtUsdM(eokToUsdM(c.remodel))}</td>
+          <td class="fac-num">${diffCell(c)}</td>
+          <td class="fac-note">${noteCell(c)}</td>
+        </tr>
+      `).join('');
+      const badge = type === 'custom'
+        ? `<span class="fac-pill custom">Custom · ${eok(state.facilityCapexEok)}</span>`
+        : `<span class="fac-pill ${type}">${CONSTRUCTION_LABEL[type]} · ${eok(facilitySumEok(type))}</span>`;
+      return `
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>CAPEX Facility Cost Breakdown</h2>
+              <p>Facility-cost table for new-build vs. remodel. Toggling 'Facility Type' above updates facility CAPEX automatically. Power, HVAC and telecom systems are identical regardless of new-build; savings come from building/civil and design/overhead.</p>
+            </div>
+            ${badge}
+          </div>
+          <div class="table-scroll">
+            <table class="facility-table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th class="fac-num ${type === 'newbuild' ? 'fac-active' : ''}">New-build Budget</th>
+                  <th class="fac-num ${type === 'remodel' ? 'fac-active' : ''}">Remodel Budget</th>
+                  <th class="fac-num">Δ</th>
+                  <th>Notes (details & cost-adjustment rationale)</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows}
+                <tr class="fac-total">
+                  <td><strong>Total CAPEX</strong></td>
+                  <td class="fac-num ${type === 'newbuild' ? 'fac-active' : ''}"><strong>${fmtUsdM(eokToUsdM(newSum))}</strong></td>
+                  <td class="fac-num ${type === 'remodel' ? 'fac-active' : ''}"><strong>${fmtUsdM(eokToUsdM(remodelSum))}</strong></td>
+                  <td class="fac-num"><span class="fac-diff save">-${totalDiffPct}%</span></td>
+                  <td class="fac-note"><div class="fac-logic">Remodeling saves ${fmtUsdM(eokToUsdM(newSum - remodelSum))} (~${totalDiffPct}%) versus new-build (${fmtUsdM(eokToUsdM(newSum))}).</div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderTableHtml(data) {
+      const rows = Array.from({ length: YEARS }, (_, index) => {
+        const annualProfit = data.annualRevenue[index] - data.annualExpense[index];
+        const margin = data.annualRevenue[index] ? annualProfit / data.annualRevenue[index] * 100 : 0;
+        return `
+          <tr>
+            <td><strong>Year ${index + 1}</strong></td>
+            <td>${eok(data.annualRevenue[index])}</td>
+            <td>${eok(data.annualExpense[index])}</td>
+            <td class="${annualProfit >= 0 ? 'text-success' : 'text-danger'}">${eok(annualProfit)}</td>
+            <td>${eok(data.cumRevenue[index])}</td>
+            <td>${eok(data.cumExpense[index])}</td>
+            <td class="${data.cumProfit[index] >= 0 ? 'text-success' : 'text-danger'}"><strong>${eok(data.cumProfit[index])}</strong></td>
+            <td>${pct(margin, 1)}</td>
+          </tr>
+        `;
+      }).join('');
+
+      return `
+        <section class="panel table-panel">
+          <div class="panel-head">
+            <div>
+              <h2>Yearly Revenue Structure</h2>
+              <p>Table of yearly revenue, expense, P&L and cumulative P&L.</p>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Annual Revenue</th>
+                  <th>Annual Expense</th>
+                  <th>Annual P&L</th>
+                  <th>Cum. Revenue</th>
+                  <th>Cum. Expense</th>
+                  <th>Cum. P&L</th>
+                  <th>Annual Margin</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        </section>
+      `;
+    }
+
+    function getComparisonRows() {
+      return RACK_KEYS.map(key => {
+        const compareState = {
+          ...state,
+          selectedRack: key,
+          racks_gb200: 0,
+          racks_gb300: 0,
+          racks_vr: 0
+        };
+        fillSelectedRack(compareState, rackTypes, key);
+        const data = calcGpu(compareState, rackTypes);
+        return { key, rack: rackTypes[key], state: compareState, data };
+      });
+    }
+
+    function renderComparePanel() {
+      const rows = getComparisonRows();
+      return `
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Model Comparison</h2>
+              <p>Under the same IT power, utilization and power rates, this compares each rack's maximum capacity and ${YEARS}-year cumulative P&L.</p>
+            </div>
+          </div>
+          <div class="compare-summary">
+            ${rows.map(item => {
+              const active = item.key === state.selectedRack ? 'active' : '';
+              return `
+                <article class="compare-card ${active}" style="--rack-color:${item.rack.color}">
+                  <h3>${item.rack.label}</h3>
+                  <p>${item.rack.processorText}</p>
+                  <div class="compare-metric">
+                    <span>Racks<b>${nf.format(getCountFromState(item.state, item.key))} units</b></span>
+                    <span>Utilization<b>${pct(item.data.allocationPct, 1)}</b></span>
+                    <span>Annual revenue<b>${eok(item.data.annualRevenue[0])}</b></span>
+                    <span>${YEARS}-yr P&L<b class="${item.data.cumProfit[YEARS - 1] >= 0 ? 'text-success' : 'text-danger'}">${eok(item.data.cumProfit[YEARS - 1])}</b></span>
+                  </div>
+                  <button type="button" data-select-rack="${item.key}">Apply this model</button>
+                </article>
+              `;
+            }).join('')}
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rack Model</th>
+                  <th>Max Count</th>
+                  <th>Total GPU</th>
+                  <th>Total FP4</th>
+                  <th>Annual Revenue</th>
+                  <th>IT CAPEX</th>
+                  <th>${YEARS}-Year Cumulative Expense</th>
+                  <th>${YEARS}-Year Cumulative P&L</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows.map(item => `
+                  <tr>
+                    <td><strong>${item.rack.label}</strong></td>
+                    <td>${nf.format(getCountFromState(item.state, item.key))} units</td>
+                    <td>${nf.format(item.data.totalGpu)} GPU</td>
+                    <td>${nf.format(Math.round(item.data.totalFp4))} PFLOPS</td>
+                    <td>${eok(item.data.annualRevenue[0])}</td>
+                    <td>${eok(item.data.itCapexEok)}</td>
+                    <td>${eok(item.data.cumExpense[YEARS - 1])}</td>
+                    <td class="${item.data.cumProfit[YEARS - 1] >= 0 ? 'text-success' : 'text-danger'}"><strong>${eok(item.data.cumProfit[YEARS - 1])}</strong></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderChart(data) {
+      const wrap = document.getElementById('chartWrap');
+      const legend = document.getElementById('legend');
+      if (!wrap || !legend) return;
+
+      const width = 860;
+      const height = 300;
+      const pad = { left: 76, right: 24, top: 24, bottom: 38 };
+      const values = [...data.cumRevenue, ...data.cumExpense, ...data.cumProfit, 0];
+      let min = Math.min(...values);
+      let max = Math.max(...values);
+      if (max === min) {
+        max += 10;
+        min -= 10;
+      }
+      const range = max - min;
+      max += range * 0.12;
+      min -= range * 0.12;
+
+      const x = index => pad.left + index * ((width - pad.left - pad.right) / (YEARS - 1));
+      const y = value => pad.top + (max - value) * ((height - pad.top - pad.bottom) / (max - min));
+
+      let grid = '';
+      for (let index = 0; index <= 4; index++) {
+        const value = min + (max - min) * (index / 4);
+        const yy = y(value);
+        grid += `<line class="gridline" x1="${pad.left}" y1="${yy}" x2="${width - pad.right}" y2="${yy}"></line>`;
+        grid += `<text class="tick" x="${pad.left - 12}" y="${yy + 4}" text-anchor="end">${eokAxis(value)}</text>`;
+      }
+
+      const zeroY = y(0);
+      if (zeroY >= pad.top && zeroY <= height - pad.bottom) {
+        grid += `<line class="gridline zero" x1="${pad.left}" y1="${zeroY}" x2="${width - pad.right}" y2="${zeroY}"></line>`;
+      }
+
+      const xTicks = Array.from({ length: YEARS }, (_, index) => `
+        <text class="tick" x="${x(index)}" y="${height - 8}" text-anchor="middle">Year ${index + 1}</text>
+      `).join('');
+
+      const series = [
+        { data: data.cumRevenue, cls: 'revenue', name: 'Cumulative Revenue', color: 'var(--primary)' },
+        { data: data.cumExpense, cls: 'expense', name: 'Cumulative Expense', color: '#f59e0b' },
+        { data: data.cumProfit, cls: 'profit', name: 'Cumulative P&L', color: 'var(--success)' }
+      ];
+
+      const paths = series.map(item => {
+        const points = item.data.map((value, index) => `${x(index)},${y(value)}`).join(' ');
+        const dots = item.data.map((value, index) => `<circle class="dot ${item.cls}" cx="${x(index)}" cy="${y(value)}" data-series="${item.cls}" data-index="${index}"></circle>`).join('');
+        return `<polyline class="line ${item.cls}" points="${points}"></polyline>${dots}`;
+      }).join('');
+
+      const hoverLines = Array.from({ length: YEARS }, (_, index) => `
+        <line class="hover-line" data-hover-index="${index}" x1="${x(index)}" y1="${pad.top}" x2="${x(index)}" y2="${height - pad.bottom}"></line>
+      `).join('');
+
+      const zoneWidth = (width - pad.left - pad.right) / YEARS;
+      const hoverZones = Array.from({ length: YEARS }, (_, index) => {
+        const zoneX = Math.max(pad.left, x(index) - zoneWidth / 2);
+        return `<rect class="hover-zone" data-hover-index="${index}" x="${zoneX}" y="${pad.top}" width="${zoneWidth}" height="${height - pad.top - pad.bottom}"></rect>`;
+      }).join('');
+
+      wrap.innerHTML = `
+        <svg class="chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="${YEARS}-year cumulative trend chart">
+          ${grid}
+          <line class="axis" x1="${pad.left}" y1="${height - pad.bottom}" x2="${width - pad.right}" y2="${height - pad.bottom}"></line>
+          <line class="axis" x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${height - pad.bottom}"></line>
+          ${paths}
+          ${hoverLines}
+          ${hoverZones}
+          ${xTicks}
+        </svg>
+        <div class="chart-tooltip" id="chartTooltip"></div>
+      `;
+      legend.innerHTML = series.map(item => `
+        <div class="legend-item"><span class="swatch" style="background:${item.color}"></span>${item.name}</div>
+      `).join('');
+
+      attachChartHover(wrap, data, series);
+    }
+
+    function attachChartHover(wrap, data, series) {
+      const tooltip = wrap.querySelector('#chartTooltip');
+      const zones = wrap.querySelectorAll('.hover-zone');
+      if (!tooltip || !zones.length) return;
+
+      const showIndex = index => {
+        wrap.querySelectorAll('.hover-line').forEach(line => {
+          line.style.opacity = Number(line.dataset.hoverIndex) === index ? '1' : '0';
+        });
+        wrap.querySelectorAll('.dot').forEach(dot => {
+          dot.classList.toggle('hover-active', Number(dot.dataset.index) === index);
+        });
+
+        const annualProfit = data.annualRevenue[index] - data.annualExpense[index];
+        tooltip.innerHTML = `
+          <div class="tt-title">Year ${index + 1}</div>
+          <div class="tt-row"><span class="tt-dot" style="background:${series[0].color}"></span>Cum. revenue<b>${eok(data.cumRevenue[index])}</b></div>
+          <div class="tt-row"><span class="tt-dot" style="background:${series[1].color}"></span>Cum. expense<b>${eok(data.cumExpense[index])}</b></div>
+          <div class="tt-row"><span class="tt-dot" style="background:${series[2].color}"></span>Cum. P&L<b>${eok(data.cumProfit[index])}</b></div>
+          <div class="tt-row" style="opacity:0.7"><span class="tt-dot" style="background:transparent"></span>Annual P&L<b>${eok(annualProfit)}</b></div>
+        `;
+        tooltip.classList.add('visible');
+      };
+
+      const positionTooltip = event => {
+        const wrapRect = wrap.getBoundingClientRect();
+        const tooltipRect = tooltip.getBoundingClientRect();
+        let left = event.clientX - wrapRect.left + 16;
+        let top = event.clientY - wrapRect.top - tooltipRect.height - 14;
+        if (left + tooltipRect.width > wrapRect.width) left = event.clientX - wrapRect.left - tooltipRect.width - 16;
+        if (top < 0) top = event.clientY - wrapRect.top + 18;
+        tooltip.style.transform = `translate(${Math.max(0, left)}px, ${Math.max(0, top)}px)`;
+      };
+
+      const hideTooltip = () => {
+        tooltip.classList.remove('visible');
+        wrap.querySelectorAll('.hover-line').forEach(line => { line.style.opacity = '0'; });
+        wrap.querySelectorAll('.dot').forEach(dot => dot.classList.remove('hover-active'));
+      };
+
+      zones.forEach(zone => {
+        const index = Number(zone.dataset.hoverIndex);
+        zone.addEventListener('mouseenter', event => { showIndex(index); positionTooltip(event); });
+        zone.addEventListener('mousemove', positionTooltip);
+        zone.addEventListener('mouseleave', hideTooltip);
+        zone.addEventListener('touchstart', event => { showIndex(index); positionTooltip(event.touches[0]); }, { passive: true });
+      });
+
+      wrap.addEventListener('mouseleave', hideTooltip);
+    }
+
+    function renderMainContent(data) {
+      const content = document.getElementById('mainContent');
+      if (state.activeView === 'compare') {
+        const gpuData = calcGpu();
+        content.innerHTML = `
+          ${renderComparePanel()}
+          ${renderChartPanel()}
+          ${renderFormulaPanel(gpuData)}
+          ${renderFacilityCapexPanel()}
+          ${renderTableHtml(gpuData)}
+        `;
+        renderChart(gpuData);
+        return;
+      }
+
+      if (state.activeView === 'gpu') {
+        content.innerHTML = `
+          ${renderRackSelector(data)}
+          ${renderRackAdjust(data)}
+          ${renderChartPanel()}
+          ${renderFormulaPanel(data)}
+          ${renderFacilityCapexPanel()}
+          ${renderTableHtml(data)}
+        `;
+        renderChart(data);
+        return;
+      }
+
+      content.innerHTML = `
+        ${renderChartPanel()}
+        ${renderFormulaPanel(data)}
+        ${renderFacilityCapexPanel()}
+        ${renderTableHtml(data)}
+      `;
+      renderChart(data);
+    }
+
+    function render() {
+      refreshTabs();
+      refreshControlVisibility();
+      refreshControls();
+      const data = getActiveData();
+      const gpuData = calcGpu();
+      renderHero(gpuData);
+      renderCards(data);
+      renderMainContent(data);
+    }
+
+    function selectRack(key) {
+      if (!RACK_KEYS.includes(key)) return;
+      fillSelectedRack(state, rackTypes, key);
+      if (state.activeView === 'colo') state.activeView = 'gpu';
+      render();
+    }
+
+    function resetSelectedRackDefaults() {
+      const key = state.selectedRack;
+      rackTypes[key] = { ...RACK_DEFAULTS[key] };
+      if (isPureSelectedMix()) fillSelectedRack(state, rackTypes, key);
+      else enforcePowerCap();
+      render();
+    }
+
+    function applyScenario(type) {
+      const currentView = state.activeView;
+      rackTypes = cloneRacks(RACK_DEFAULTS);
+      state = {
+        ...DEFAULTS,
+        activeView: currentView,
+        selectedRack: 'veraRubin',
+        racks_gb200: 0,
+        racks_gb300: 0,
+        racks_vr: 0
+      };
+
+      if (type === 'conservative') {
+        Object.assign(state, {
+          utilY1: 50,
+          utilY2: 80,
+          utilY3: 70,
+          totalPowerKw: 2700,
+          facilityCapexEok: facilitySumEok('remodel'),
+          constructionType: 'remodel',
+          energyCostRate: 140,
+          basicChargeKwMonth: 11000,
+          fxKrwUsd: 1550,
+          colocationFeeKwMonth: 115000,
+          electricSaleRate: 155
+        });
+        RACK_KEYS.forEach(key => {
+          rackTypes[key].gpuHourlyRate = Math.round(RACK_DEFAULTS[key].gpuHourlyRate * 0.9);
+        });
+      }
+
+      if (type === 'aggressive') {
+        Object.assign(state, {
+          utilY1: 70,
+          utilY2: 95,
+          utilY3: 90,
+          totalPowerKw: 2360,
+          facilityCapexEok: facilitySumEok('remodel'),
+          constructionType: 'remodel',
+          energyCostRate: 110,
+          basicChargeKwMonth: 9000,
+          fxKrwUsd: 1450,
+          colocationFeeKwMonth: 145000,
+          electricSaleRate: 185
+        });
+        RACK_KEYS.forEach(key => {
+          rackTypes[key].gpuHourlyRate = Math.round(RACK_DEFAULTS[key].gpuHourlyRate * 1.1);
+        });
+      }
+
+      fillSelectedRack(state, rackTypes, state.selectedRack);
+      buildControls();
+      render();
+    }
+
+    function csvEscape(value) {
+      const text = String(value ?? '');
+      if (/[",\n]/.test(text)) return `"${text.replace(/"/g, '""')}"`;
+      return text;
+    }
+
+    function exportCurrentTable() {
+      const data = getActiveData();
+      const modeName = state.activeView === 'colo' ? 'Colocation' : 'Server/GPU Lease';
+      const fxNote = `FX ${nf.format(currentFx())} KRW/USD`;
+      const header = ['Model', 'Year', 'Annual Revenue (USD M)', 'Annual Expense (USD M)', 'Annual P&L (USD M)', 'Cumulative Revenue (USD M)', 'Cumulative Expense (USD M)', 'Cumulative P&L (USD M)', 'Annual Margin (%)', 'FX (KRW/USD)'];
+      const rows = Array.from({ length: YEARS }, (_, index) => {
+        const annualProfit = data.annualRevenue[index] - data.annualExpense[index];
+        const margin = data.annualRevenue[index] ? annualProfit / data.annualRevenue[index] * 100 : 0;
+        return [
+          modeName,
+          `Year ${index + 1}`,
+          eokToUsdM(data.annualRevenue[index]).toFixed(3),
+          eokToUsdM(data.annualExpense[index]).toFixed(3),
+          eokToUsdM(annualProfit).toFixed(3),
+          eokToUsdM(data.cumRevenue[index]).toFixed(3),
+          eokToUsdM(data.cumExpense[index]).toFixed(3),
+          eokToUsdM(data.cumProfit[index]).toFixed(3),
+          margin.toFixed(2),
+          String(currentFx())
+        ];
+      });
+      const csv = [header, ...rows].map(row => row.map(csvEscape).join(',')).join('\n');
+      const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      const today = new Date().toISOString().slice(0, 10);
+      link.href = url;
+      link.download = `aidc_revenue_${state.activeView}_${today}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function readNumericInput(input) {
+      const raw = String(input.value ?? '').trim();
+      if (raw === '' || raw === '-' || raw === '+' || raw === '.' || raw === '-.' || raw === '+.') return null;
+      const value = Number(raw);
+      return Number.isFinite(value) ? value : null;
+    }
+
+    function applyRackCountInput(input, finalize = false) {
+      const countKey = input.dataset.rackCount;
+      if (!countKey) return false;
+      const value = readNumericInput(input);
+      if (value === null) return false;
+      state.selectedRack = countKey;
+      setCountForState(state, countKey, value);
+      enforcePowerCap(countKey);
+      if (finalize) input.value = getCountFromState(state, countKey);
+      return true;
+    }
+
+    function applyRackSpecInput(input, finalize = false) {
+      const rackKey = input.dataset.rackKey;
+      const rackProp = input.dataset.rackProp;
+      if (!rackKey || !rackProp || !rackTypes[rackKey]) return false;
+      const value = readNumericInput(input);
+      if (value === null) return false;
+
+      let normalized = value;
+      if (rackProp === 'rackPowerKw') normalized = Math.max(1, normalized);
+      if (rackProp === 'rackPriceUsd') normalized = Math.max(0, normalized);
+      if (rackProp === 'gpuHourlyRate') normalized = usdToKrw(Math.max(0, normalized)); // input is $/hr -> store KRW/hr
+
+      rackTypes[rackKey][rackProp] = normalized;
+
+      if (rackProp === 'rackPowerKw') {
+        if (isPureSelectedMix()) fillSelectedRack(state, rackTypes, state.selectedRack);
+        else enforcePowerCap(rackKey);
+      }
+
+      if (finalize) {
+        input.value = rackProp === 'gpuHourlyRate'
+          ? Math.round(krwToUsd(rackTypes[rackKey][rackProp]) * 100) / 100
+          : rackTypes[rackKey][rackProp];
+      }
+      return true;
+    }
+
+    function syncRackAdjustLive(activeInput = document.activeElement) {
+      if (state.activeView !== 'gpu') return;
+
+      const data = calcGpu();
+      const usageWidth = Math.min(100, Math.max(0, data.allocationPct));
+      const meterFill = document.querySelector('.usage-strip .meter span');
+      const usageValue = document.querySelector('.usage-strip strong');
+      if (meterFill) meterFill.style.width = `${usageWidth}%`;
+      if (usageValue) usageValue.textContent = `${pct(data.allocationPct, 1)} (${nf.format(data.usedItPower)}kW / ${nf.format(state.itPowerKw)}kW)`;
+
+      RACK_KEYS.forEach(key => {
+        const rack = rackTypes[key];
+        const count = getCountFromState(state, key);
+        const maxCount = maxCountForRack(key);
+        const card = document.querySelector(`[data-rack-card="${key}"]`);
+        if (!card) return;
+
+        const countChip = card.querySelector('.count-chip');
+        if (countChip) countChip.textContent = `${nf.format(count)} units`;
+
+        card.querySelectorAll(`[data-rack-count="${key}"]`).forEach(control => {
+          control.max = maxCount;
+          if (control === activeInput && control.type === 'number') return;
+          control.value = count;
+        });
+
+        card.querySelectorAll(`[data-rack-key="${key}"]`).forEach(control => {
+          const prop = control.dataset.rackProp;
+          if (!prop || !(prop in rack)) return;
+          if (control === activeInput) return;
+          control.value = prop === 'gpuHourlyRate'
+            ? Math.round(krwToUsd(rack[prop]) * 100) / 100
+            : rack[prop];
+        });
+
+        const priceInput = card.querySelector(`[data-rack-key="${key}"][data-rack-prop="rackPriceUsd"]`);
+        const krwHint = priceInput ? priceInput.closest('.spec-input')?.querySelector('.krw-hint') : null;
+        if (krwHint) krwHint.textContent = formatKrwAmount(rack.rackPriceUsd * state.fxKrwUsd);
+      });
+    }
+
+    let liveMetricsFrame = null;
+    function refreshLiveRackMetrics(activeInput = document.activeElement) {
+      syncRackAdjustLive(activeInput);
+      if (liveMetricsFrame) cancelAnimationFrame(liveMetricsFrame);
+      liveMetricsFrame = requestAnimationFrame(() => {
+        liveMetricsFrame = null;
+        const data = getActiveData();
+        renderCards(data);
+        if (document.getElementById('chartWrap')) renderChart(data);
+      });
+    }
+
+    document.addEventListener('input', event => {
+      const countKey = event.target.dataset.rackCount;
+      if (countKey) {
+        if (applyRackCountInput(event.target)) refreshLiveRackMetrics(event.target);
+        return;
+      }
+
+      const rackKey = event.target.dataset.rackKey;
+      const rackProp = event.target.dataset.rackProp;
+      if (rackKey && rackProp && rackTypes[rackKey]) {
+        if (applyRackSpecInput(event.target)) refreshLiveRackMetrics(event.target);
+        return;
+      }
+
+      const inputId = event.target.dataset.input;
+      if (inputId) {
+        const def = getControlDef(inputId);
+        let value = Number(event.target.value);
+        if (def && def.currency) {
+          if (Number.isFinite(def.usdMin)) value = Math.max(def.usdMin, value);
+          if (Number.isFinite(def.usdMax)) value = Math.min(def.usdMax, value);
+          const stateVal = ctrlToState(def, value);
+          state[inputId] = stateVal;
+          if (inputId === 'facilityCapexEok') state.constructionType = deriveConstructionType(stateVal);
+        } else {
+          if (def) {
+            if (Number.isFinite(def.min)) value = Math.max(def.min, value);
+            if (Number.isFinite(def.max)) value = Math.min(def.max, value);
+          }
+          if (/^utilY[123]$/.test(inputId)) value = Math.max(0, Math.min(100, value));
+          state[inputId] = value;
+          if (inputId === 'facilityCapexEok') state.constructionType = deriveConstructionType(value);
+        }
+        if (/^utilY[123]$/.test(inputId) && activeUtilYear) refreshUtilTip(activeUtilYear);
+        if (inputId === 'itPowerKw') handleItPowerChange();
+        refreshControls();
+        render();
+      }
+    });
+
+    document.addEventListener('change', event => {
+      const countKey = event.target.dataset.rackCount;
+      if (countKey) {
+        applyRackCountInput(event.target, true);
+        render();
+        return;
+      }
+
+      const rackKey = event.target.dataset.rackKey;
+      const rackProp = event.target.dataset.rackProp;
+      if (rackKey && rackProp && rackTypes[rackKey]) {
+        applyRackSpecInput(event.target, true);
+        render();
+      }
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Enter') return;
+      if (event.target.dataset.rackCount || (event.target.dataset.rackKey && event.target.dataset.rackProp)) {
+        event.target.blur();
+      }
+    });
+
+    document.addEventListener('click', event => {
+      const viewButton = event.target.closest('[data-view]');
+      if (viewButton) {
+        state.activeView = viewButton.dataset.view;
+        render();
+        return;
+      }
+
+      const scenarioButton = event.target.closest('[data-scenario]');
+      if (scenarioButton) {
+        applyScenario(scenarioButton.dataset.scenario);
+        return;
+      }
+
+      const constructionButton = event.target.closest('[data-construction]');
+      if (constructionButton) {
+        applyConstructionType(constructionButton.dataset.construction);
+        return;
+      }
+
+      const rackButton = event.target.closest('[data-select-rack]');
+      if (rackButton) {
+        selectRack(rackButton.dataset.selectRack);
+        return;
+      }
+
+      if (event.target.closest('[data-reset-selected]')) {
+        resetSelectedRackDefaults();
+        return;
+      }
+
+      if (event.target.closest('[data-export]')) {
+        exportCurrentTable();
+      }
+    });
+
+    // Per-year utilization hover popup (same mechanism as the chart's cumulative-trend tooltip)
+    const utilTip = document.createElement('div');
+    utilTip.className = 'util-tip';
+    utilTip.id = 'utilTip';
+    document.body.appendChild(utilTip);
+    let activeUtilYear = null;
+
+    function refreshUtilTip(year) {
+      const val = state['utilY' + year];
+      utilTip.innerHTML = `
+        <div class="tt-title">Year ${year} (${nf.format(Number(val) || 0)}%)</div>
+        <div class="tt-desc">${UTIL_NOTES[year] || ''}</div>
+      `;
+    }
+    function positionUtilTip(event) {
+      const w = utilTip.offsetWidth;
+      const h = utilTip.offsetHeight;
+      let left = event.clientX + 14;
+      let top = event.clientY - h - 12;
+      if (left + w > window.innerWidth - 8) left = event.clientX - w - 14;
+      if (top < 8) top = event.clientY + 18;
+      utilTip.style.left = `${Math.max(8, left)}px`;
+      utilTip.style.top = `${Math.max(8, top)}px`;
+    }
+    document.addEventListener('mouseover', event => {
+      const yearEl = event.target.closest('[data-util-year]');
+      if (!yearEl) return;
+      activeUtilYear = Number(yearEl.dataset.utilYear);
+      refreshUtilTip(activeUtilYear);
+      utilTip.classList.add('visible');
+      positionUtilTip(event);
+    });
+    document.addEventListener('mousemove', event => {
+      if (!activeUtilYear) return;
+      if (event.target.closest('[data-util-year]')) positionUtilTip(event);
+    });
+    document.addEventListener('mouseout', event => {
+      const yearEl = event.target.closest('[data-util-year]');
+      if (yearEl && !yearEl.contains(event.relatedTarget)) {
+        activeUtilYear = null;
+        utilTip.classList.remove('visible');
+      }
+    });
+
+    fillSelectedRack(state, rackTypes, state.selectedRack);
+    buildControls();
+    render();
+  </script><div class="util-tip" id="utilTip" style="left: 401px; top: 624px;">
+        <div class="tt-title">Year 2 (90%)</div>
+        <div class="tt-desc">Stabilization and AI-training demand surge (peak)</div>
+      </div>
+
+
+
+
+
+
+</body></html>
