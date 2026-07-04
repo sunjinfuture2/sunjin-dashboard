@@ -151,6 +151,19 @@
       backdrop-filter: blur(10px);
     }
 
+    .hero-ci {
+      position: absolute;
+      right: 34px;
+      bottom: 28px;
+      z-index: 2;
+      width: 177px; /* 709px 원본의 1/4 */
+      height: auto;
+      pointer-events: none;
+      user-select: none;
+      /* PPT 도형 효과 > 그림자 > 오프셋: 오른쪽 아래 */
+      filter: drop-shadow(3px 3px 4px rgba(0, 0, 0, 0.55));
+    }
+
     .lang-toggle {
       position: absolute;
       top: 24px;
@@ -1084,6 +1097,7 @@
     @media (max-width: 980px) {
       .app-shell { width: min(100% - 18px, 1480px); padding-top: 10px; }
       .hero { padding: 28px; border-radius: 26px; }
+      .hero-ci { width: 130px; right: 24px; bottom: 22px; }
       .summary-grid, .rack-card-grid, .rack-adjust-grid, .compare-summary { grid-template-columns: 1fr; }
       .formula-grid { grid-template-columns: 1fr; }
       .view-tabs { width: 100%; overflow-x: auto; }
@@ -1117,11 +1131,12 @@
           <button type="button" class="hero-btn" data-scenario="aggressive">공격적 시나리오</button>
         </div>
       </div>
+      <img class="hero-ci" src="data:image/png;base64,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" alt="SUNJIN Engineering &amp; Architecture">
     </header>
 
     <nav class="view-tabs" aria-label="Model tabs">
-      <button type="button" class="view-tab" data-view="gpu">서버/GPU 임대</button>
-      <button type="button" class="view-tab active" data-view="colo">상면임대</button>
+      <button type="button" class="view-tab active" data-view="gpu">서버/GPU 임대</button>
+      <button type="button" class="view-tab" data-view="colo">상면임대</button>
       <button type="button" class="view-tab" data-view="compare">모델 비교</button>
     </nav>
 
@@ -1253,7 +1268,7 @@
             
         </section>
       
-        <section class="control-group" data-views="gpu,compare" data-scope="GPU 모델" style="display: none;">
+        <section class="control-group" data-views="gpu,compare" data-scope="GPU 모델" style="display: block;">
           <h3>GPUaaS 상세 설정</h3>
           
               <div class="control-item">
@@ -1272,7 +1287,7 @@
             
                 <div class="control-item">
                   <div class="control-meta">
-                    <label for="control_depY1">labelDepY</label>
+                    <label for="control_depY1">1년차 감가상각률</label>
                     <div class="control-value-wrap">
                       <span class="control-value" data-control-badge="depY1">33%</span>
                     </div>
@@ -1283,7 +1298,7 @@
               
                 <div class="control-item">
                   <div class="control-meta">
-                    <label for="control_depY2">labelDepY</label>
+                    <label for="control_depY2">2년차 감가상각률</label>
                     <div class="control-value-wrap">
                       <span class="control-value" data-control-badge="depY2">66%</span>
                     </div>
@@ -1294,7 +1309,7 @@
               
                 <div class="control-item">
                   <div class="control-meta">
-                    <label for="control_depY3">labelDepY</label>
+                    <label for="control_depY3">3년차 감가상각률</label>
                     <div class="control-value-wrap">
                       <span class="control-value" data-control-badge="depY3">99%</span>
                     </div>
@@ -1305,7 +1320,7 @@
               
         </section>
       
-        <section class="control-group" data-views="colo" data-scope="상면 모델" style="display: block;">
+        <section class="control-group" data-views="colo" data-scope="상면 모델" style="display: none;">
           <h3>상면임대(Colocation) 설정</h3>
           
               <div class="control-item">
@@ -1344,26 +1359,170 @@
         <section class="summary-grid" id="summaryCards" aria-label="Revenue summary">
         <article class="summary-card">
           <span class="label">연간 매출</span>
-          <div class="value text-primary">49.3억</div>
-          <div class="hint">상면 31.2억 + 전기판매 23.2억</div>
+          <div class="value text-primary">1,892억</div>
+          <div class="hint">보고서 기본값 대비 +0억</div>
         </article>
         <article class="summary-card">
           <span class="label">3년 누적 매출</span>
-          <div class="value text-primary">163.1억</div>
-          <div class="hint">총 수전용량 2,500kW · IT 수전용량 2,000kW · PUE 1.25</div>
+          <div class="value text-primary">7,253억</div>
+          <div class="hint">Vera Rubin 10대 · 총 36,000 PFLOPS</div>
         </article>
         <article class="summary-card">
           <span class="label">3년 누적 지출</span>
-          <div class="value">340.1억</div>
-          <div class="hint">시설 CAPEX 270억 + 전기료 23.4억</div>
+          <div class="value">3,824억</div>
+          <div class="hint">IT CAPEX 1,170억 + 시설 270억</div>
         </article>
         <article class="summary-card">
           <span class="label">3년 누적 손익</span>
-          <div class="value text-danger">-177억</div>
-          <div class="hint">3년 내 BEP 미달 · 누적 매출 대비 -108.5%</div>
+          <div class="value text-success">3,430억</div>
+          <div class="hint">BEP 1년차 · 누적 매출 대비 47.3%</div>
         </article>
       </section>
         <div id="mainContent">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>랙 시스템 선택값</h2>
+              <p>보고서의 GB200·GB300·Vera Rubin 비교표 값을 기준으로 기본 전력·구매가·성능을 넣었습니다. 카드를 누르면 해당 랙으로 IT 수전용량 기준 내 최대 수량이 자동 배치됩니다.</p>
+            </div>
+            <button type="button" class="dark-pill" data-reset-selected="">선택 랙 기준값 재적용</button>
+          </div>
+          <div class="rack-card-grid">
+            
+                <button type="button" class="rack-select-card " data-select-rack="gb200" style="--rack-color:var(--gb200-color)">
+                  <span class="rack-kicker">NVL72 · 최대 16대</span>
+                  <strong>GB200 NVL72</strong>
+                  <span class="rack-sub">36 Grace CPU + 72 Blackwell GPU</span>
+                  <div class="mini-specs">
+                    <span>랙당 전력<b>120kW</b></span>
+                    <span>랙당 구매가<b>$3,000,000</b></span>
+                    <span>기본 단가<b>20,000원/hr</b></span>
+                    <span>FP4 성능<b>1,440 PFLOPS</b></span>
+                  </div>
+                </button>
+              
+                <button type="button" class="rack-select-card " data-select-rack="gb300" style="--rack-color:var(--gb300-color)">
+                  <span class="rack-kicker">NVL72 · 최대 14대</span>
+                  <strong>GB300 NVL72</strong>
+                  <span class="rack-sub">36 Grace CPU + 72 Blackwell Ultra GPU</span>
+                  <div class="mini-specs">
+                    <span>랙당 전력<b>140kW</b></span>
+                    <span>랙당 구매가<b>$4,000,000</b></span>
+                    <span>기본 단가<b>31,500원/hr</b></span>
+                    <span>FP4 성능<b>2,160 PFLOPS</b></span>
+                  </div>
+                </button>
+              
+                <button type="button" class="rack-select-card active" data-select-rack="veraRubin" style="--rack-color:var(--vr-color)">
+                  <span class="rack-kicker">NVL72 · 최대 10대</span>
+                  <strong>Vera Rubin NVL72</strong>
+                  <span class="rack-sub">36 Vera CPU + 72 Rubin GPU</span>
+                  <div class="mini-specs">
+                    <span>랙당 전력<b>190kW</b></span>
+                    <span>랙당 구매가<b>$7,800,000</b></span>
+                    <span>기본 단가<b>50,000원/hr</b></span>
+                    <span>FP4 성능<b>3,600 PFLOPS</b></span>
+                  </div>
+                </button>
+              
+          </div>
+        </section>
+      
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>랙 구성 직접 조정</h2>
+              <p>랙 수량, 랙당 구매가, 랙당 전력, GPU 시간당 임대단가를 직접 바꿀 수 있습니다. 수량은 IT 수전용량 기준을 넘지 않도록 자동 보정됩니다.</p>
+            </div>
+          </div>
+          <div class="usage-strip">
+            <span>GPU 랙 전력 사용률</span>
+            <div class="meter"><span style="width:95%"></span></div>
+            <strong>95% (1,900kW / 2,000kW)</strong>
+          </div>
+          <div class="rack-adjust-grid">
+            
+                <article class="rack-adjust-card" data-rack-card="gb200" style="--rack-color:var(--gb200-color)">
+                  <div class="rack-adjust-title">
+                    <strong>GB200</strong>
+                    <span class="count-chip">0대</span>
+                  </div>
+                  <div class="rack-count-control">
+                    <input type="range" min="0" max="16" step="1" value="0" data-rack-count="gb200">
+                    <input type="number" min="0" max="16" step="1" value="0" data-rack-count="gb200" aria-label="GB200 rack count">
+                  </div>
+                  <div class="spec-grid">
+                    <div class="spec-input">
+                      <label>랙당 구매가(USD)</label>
+                      <input type="number" min="0" step="1000" value="3000000" data-rack-key="gb200" data-rack-prop="rackPriceUsd">
+                      <div class="krw-hint">약 45억원</div>
+                    </div>
+                    <div class="spec-input">
+                      <label>랙당 전력(kW)</label>
+                      <input type="number" min="1" step="1" value="120" data-rack-key="gb200" data-rack-prop="rackPowerKw">
+                    </div>
+                    <div class="spec-input">
+                      <label>GPU 시간당 임대단가 (원/hr)</label>
+                      <input type="number" min="0" step="500" value="20000" data-rack-key="gb200" data-rack-prop="gpuHourlyRate">
+                    </div>
+                  </div>
+                </article>
+              
+                <article class="rack-adjust-card" data-rack-card="gb300" style="--rack-color:var(--gb300-color)">
+                  <div class="rack-adjust-title">
+                    <strong>GB300</strong>
+                    <span class="count-chip">0대</span>
+                  </div>
+                  <div class="rack-count-control">
+                    <input type="range" min="0" max="14" step="1" value="0" data-rack-count="gb300">
+                    <input type="number" min="0" max="14" step="1" value="0" data-rack-count="gb300" aria-label="GB300 rack count">
+                  </div>
+                  <div class="spec-grid">
+                    <div class="spec-input">
+                      <label>랙당 구매가(USD)</label>
+                      <input type="number" min="0" step="1000" value="4000000" data-rack-key="gb300" data-rack-prop="rackPriceUsd">
+                      <div class="krw-hint">약 60억원</div>
+                    </div>
+                    <div class="spec-input">
+                      <label>랙당 전력(kW)</label>
+                      <input type="number" min="1" step="1" value="140" data-rack-key="gb300" data-rack-prop="rackPowerKw">
+                    </div>
+                    <div class="spec-input">
+                      <label>GPU 시간당 임대단가 (원/hr)</label>
+                      <input type="number" min="0" step="500" value="31500" data-rack-key="gb300" data-rack-prop="gpuHourlyRate">
+                    </div>
+                  </div>
+                </article>
+              
+                <article class="rack-adjust-card" data-rack-card="veraRubin" style="--rack-color:var(--vr-color)">
+                  <div class="rack-adjust-title">
+                    <strong>Vera Rubin</strong>
+                    <span class="count-chip">10대</span>
+                  </div>
+                  <div class="rack-count-control">
+                    <input type="range" min="0" max="10" step="1" value="10" data-rack-count="veraRubin">
+                    <input type="number" min="0" max="10" step="1" value="10" data-rack-count="veraRubin" aria-label="Vera Rubin rack count">
+                  </div>
+                  <div class="spec-grid">
+                    <div class="spec-input">
+                      <label>랙당 구매가(USD)</label>
+                      <input type="number" min="0" step="1000" value="7800000" data-rack-key="veraRubin" data-rack-prop="rackPriceUsd">
+                      <div class="krw-hint">약 117억원</div>
+                    </div>
+                    <div class="spec-input">
+                      <label>랙당 전력(kW)</label>
+                      <input type="number" min="1" step="1" value="190" data-rack-key="veraRubin" data-rack-prop="rackPowerKw">
+                    </div>
+                    <div class="spec-input">
+                      <label>GPU 시간당 임대단가 (원/hr)</label>
+                      <input type="number" min="0" step="500" value="50000" data-rack-key="veraRubin" data-rack-prop="gpuHourlyRate">
+                    </div>
+                  </div>
+                </article>
+              
+          </div>
+        </section>
+      
         <section class="panel chart-panel">
           <div class="panel-head">
             <div>
@@ -1373,16 +1532,16 @@
           </div>
           <div class="chart-wrap" id="chartWrap">
         <svg class="chart" viewBox="0 0 860 300" role="img" aria-label="3년 누적 추이">
-          <line class="gridline" x1="88" y1="262" x2="836" y2="262"></line><text class="tick" x="76" y="266" text-anchor="end">-309.2억</text><line class="gridline" x1="88" y1="202.5" x2="836" y2="202.5"></line><text class="tick" x="76" y="206.5" text-anchor="end">-129.5억</text><line class="gridline" x1="88" y1="143" x2="836" y2="143"></line><text class="tick" x="76" y="147" text-anchor="end">50.3억</text><line class="gridline" x1="88" y1="83.50000000000001" x2="836" y2="83.50000000000001"></line><text class="tick" x="76" y="87.50000000000001" text-anchor="end">230억</text><line class="gridline" x1="88" y1="24" x2="836" y2="24"></line><text class="tick" x="76" y="28" text-anchor="end">409.7억</text><line class="gridline zero" x1="88" y1="159.6412776574292" x2="836" y2="159.6412776574292"></line>
+          <line class="gridline" x1="88" y1="262" x2="836" y2="262"></line><text class="tick" x="76" y="266" text-anchor="end">-870.4억</text><line class="gridline" x1="88" y1="202.5" x2="836" y2="202.5"></line><text class="tick" x="76" y="206.5" text-anchor="end">1,378억</text><line class="gridline" x1="88" y1="143.00000000000003" x2="836" y2="143.00000000000003"></line><text class="tick" x="76" y="147.00000000000003" text-anchor="end">3,627억</text><line class="gridline" x1="88" y1="83.50000000000001" x2="836" y2="83.50000000000001"></line><text class="tick" x="76" y="87.50000000000001" text-anchor="end">5,875억</text><line class="gridline" x1="88" y1="24.000000000000025" x2="836" y2="24.000000000000025"></line><text class="tick" x="76" y="28.000000000000025" text-anchor="end">8,124억</text><line class="gridline zero" x1="88" y1="238.96774193548387" x2="836" y2="238.96774193548387"></line>
           <line class="axis" x1="88" y1="262" x2="836" y2="262"></line>
           <line class="axis" x1="88" y1="24" x2="88" y2="262"></line>
-          <polyline class="line revenue" points="88,143.30818477565742 462,123.97334824210803 836,105.63909292581785"></polyline><circle class="dot revenue" cx="88" cy="143.30818477565742" data-series="revenue" data-index="0"></circle><circle class="dot revenue" cx="462" cy="123.97334824210803" data-series="revenue" data-index="1"></circle><circle class="dot revenue" cx="836" cy="105.63909292581785" data-series="revenue" data-index="2"></circle><polyline class="line expense" points="88,63.98172049760274 462,55.06579096895638 836,47.03225806451613"></polyline><circle class="dot expense" cx="88" cy="63.98172049760274" data-series="expense" data-index="0"></circle><circle class="dot expense" cx="462" cy="55.06579096895638" data-series="expense" data-index="1"></circle><circle class="dot expense" cx="836" cy="47.03225806451613" data-series="expense" data-index="2"></circle><polyline class="line profit" points="88,238.96774193548387 462,228.54883493058088 836,218.24811251873092"></polyline><circle class="dot profit" cx="88" cy="238.96774193548387" data-series="profit" data-index="0"></circle><circle class="dot profit" cx="462" cy="228.54883493058088" data-series="profit" data-index="1"></circle><circle class="dot profit" cx="836" cy="218.24811251873092" data-series="profit" data-index="2"></circle>
+          <polyline class="line revenue" points="88,188.8976157082749 462,113.79242636746145 836,47.03225806451614"></polyline><circle class="dot revenue" cx="88" cy="188.8976157082749" data-series="revenue" data-index="0"></circle><circle class="dot revenue" cx="462" cy="113.79242636746145" data-series="revenue" data-index="1"></circle><circle class="dot revenue" cx="836" cy="47.03225806451614" data-series="revenue" data-index="2"></circle><polyline class="line expense" points="88,190.16580669777517 462,169.05105334936792 836,137.78636566457945"></polyline><circle class="dot expense" cx="88" cy="190.16580669777517" data-series="expense" data-index="0"></circle><circle class="dot expense" cx="462" cy="169.05105334936792" data-series="expense" data-index="1"></circle><circle class="dot expense" cx="836" cy="137.78636566457945" data-series="expense" data-index="2"></circle><polyline class="line profit" points="88,237.69955094598362 462,183.7091149535774 836,148.21363433542058"></polyline><circle class="dot profit" cx="88" cy="237.69955094598362" data-series="profit" data-index="0"></circle><circle class="dot profit" cx="462" cy="183.7091149535774" data-series="profit" data-index="1"></circle><circle class="dot profit" cx="836" cy="148.21363433542058" data-series="profit" data-index="2"></circle>
           
-        <line class="hover-line" data-hover-index="0" x1="88" y1="24" x2="88" y2="262" style="opacity: 0;"></line>
+        <line class="hover-line" data-hover-index="0" x1="88" y1="24" x2="88" y2="262"></line>
       
-        <line class="hover-line" data-hover-index="1" x1="462" y1="24" x2="462" y2="262" style="opacity: 0;"></line>
+        <line class="hover-line" data-hover-index="1" x1="462" y1="24" x2="462" y2="262"></line>
       
-        <line class="hover-line" data-hover-index="2" x1="836" y1="24" x2="836" y2="262" style="opacity: 0;"></line>
+        <line class="hover-line" data-hover-index="2" x1="836" y1="24" x2="836" y2="262"></line>
       
           <rect class="hover-zone" data-hover-index="0" x="88" y="24" width="249.33333333333334" height="238"></rect><rect class="hover-zone" data-hover-index="1" x="337.3333333333333" y="24" width="249.33333333333334" height="238"></rect><rect class="hover-zone" data-hover-index="2" x="711.3333333333334" y="24" width="249.33333333333334" height="238"></rect>
           
@@ -1393,13 +1552,7 @@
         <text class="tick" x="836" y="292" text-anchor="middle">3년차</text>
       
         </svg>
-        <div class="chart-tooltip" id="chartTooltip" style="transform: translate(168px, 69.8906px);">
-          <div class="tt-title">1년차</div>
-          <div class="tt-row"><span class="tt-dot" style="background:var(--primary)"></span>누적매출<b>49.3억</b></div>
-          <div class="tt-row"><span class="tt-dot" style="background:#f59e0b"></span>누적지출<b>288.9억</b></div>
-          <div class="tt-row"><span class="tt-dot" style="background:var(--success)"></span>누적손익<b>-239.6억</b></div>
-          <div class="tt-row" style="opacity:0.7"><span class="tt-dot" style="background:transparent"></span>연손익<b>-239.6억</b></div>
-        </div>
+        <div class="chart-tooltip" id="chartTooltip"></div>
       </div>
           <div class="legend" id="legend"><div class="legend-item"><span class="swatch" style="background:var(--primary)"></span>누적 매출</div><div class="legend-item"><span class="swatch" style="background:#f59e0b"></span>누적 지출</div><div class="legend-item"><span class="swatch" style="background:var(--success)"></span>누적 손익</div></div>
         </section>
@@ -1413,11 +1566,11 @@
           </div>
 
           <div class="basis-alert">
-            <p><strong>현재 기준: 상면임대 모델은 IT 수전용량 2,000kW, 상면요율 130,000원/kW·월, 전기 판매단가 138원/kWh를 반영해 연매출 49.3억, 전기료 23.4억로 계산합니다.</strong></p>
+            <p><strong>현재 기준: 선택 랙은 Vera Rubin NVL72이며, Vera Rubin 10대 구성입니다. 랙당 전력 190kW, 랙당 구매가 $7,800,000, 기본 임대단가 50,000원/hr를 반영해 연매출 1,892억, IT 장비 CAPEX 1,170억, 전기료 22.4억로 계산합니다.</strong></p>
             <div class="usage-strip" style="margin:0; background:rgba(255,255,255,0.58); border-color:rgba(245,158,11,0.22)">
-              <span>상면 과금 현황</span>
-              <div class="meter"><span style="width:100%"></span></div>
-              <strong>상면 과금 기준: IT 수전용량 2,000kW, 총 수전용량 2,500kW(PUE 1.25)</strong>
+              <span>전력 배치 현황</span>
+              <div class="meter"><span style="width:95%"></span></div>
+              <strong>GPU 랙 전력 사용률: 95% (Vera Rubin 10대 / IT 수전용량 2,000kW)</strong>
             </div>
             <div class="basis-chips">
               <span>연차 가동률 60·90·80%</span>
@@ -1427,7 +1580,7 @@
               <span>시설 CAPEX 270억</span>
               <span>전력량 단가 121.7원/kWh</span>
               <span>전기기본요금 9,810원/kW·월</span>
-              <span>상면요율 130,000원/kW·월</span><span>전기판매 138원/kWh</span>
+              <span>환율 1,500원/USD</span><span>감가상각 33/66/99%</span>
             </div>
           </div>
 
@@ -1573,35 +1726,35 @@
               <tbody>
           <tr>
             <td><strong>1년차</strong></td>
-            <td>49.3억</td>
-            <td>288.9억</td>
-            <td class="text-danger">-239.6억</td>
-            <td>49.3억</td>
-            <td>288.9억</td>
-            <td class="text-danger"><strong>-239.6억</strong></td>
-            <td>-485.7%</td>
+            <td>1,892억</td>
+            <td>1,844억</td>
+            <td class="text-success">47.9억</td>
+            <td>1,892억</td>
+            <td>1,844억</td>
+            <td class="text-success"><strong>47.9억</strong></td>
+            <td>2.5%</td>
           </tr>
         
           <tr>
             <td><strong>2년차</strong></td>
-            <td>58.4억</td>
-            <td>26.9억</td>
-            <td class="text-success">31.5억</td>
-            <td>107.7억</td>
-            <td>315.9억</td>
-            <td class="text-danger"><strong>-208.1억</strong></td>
-            <td>53.9%</td>
+            <td>2,838억</td>
+            <td>797.9억</td>
+            <td class="text-success">2,040억</td>
+            <td>4,730억</td>
+            <td>2,642억</td>
+            <td class="text-success"><strong>2,088억</strong></td>
+            <td>71.9%</td>
           </tr>
         
           <tr>
             <td><strong>3년차</strong></td>
-            <td>55.4억</td>
-            <td>24.3억</td>
-            <td class="text-success">31.1억</td>
-            <td>163.1억</td>
-            <td>340.1억</td>
-            <td class="text-danger"><strong>-177억</strong></td>
-            <td>56.2%</td>
+            <td>2,523억</td>
+            <td>1,181억</td>
+            <td class="text-success">1,341억</td>
+            <td>7,253억</td>
+            <td>3,824억</td>
+            <td class="text-success"><strong>3,430억</strong></td>
+            <td>53.2%</td>
           </tr>
         </tbody>
             </table>
@@ -3297,9 +3450,10 @@
     applyStaticI18n();
     buildControls();
     render();
-  </script><div class="util-tip" id="utilTip" style="left: 137px; top: 122px;">
+  </script><div class="util-tip" id="utilTip"></div><div class="util-tip" id="utilTip" style="left: 137px; top: 122px;">
         <div class="tt-title">1년차 (60%)</div>
         <div class="tt-desc">초기 셋업 및 램프업(Ramp-up) 기간 반영</div>
       </div>
+
 
 </body></html>
