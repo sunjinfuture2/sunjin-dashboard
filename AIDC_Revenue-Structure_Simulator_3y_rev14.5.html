@@ -6146,6 +6146,7 @@ tr.th-disabled .th-here { background:#94a3b8; }
       word-break: keep-all;
     }
     .fin-table-wrap { overflow-x: auto; }
+    #podFinPanel { scroll-margin-top: 16px; }
     table.fin-table { min-width: 720px; }
     table.fin-table tr.is-key td { background: rgba(100, 87, 255, 0.06); font-weight: 950; color: var(--ink); }
     /* 0년차(투자 실행 시점) 열 — 운영 연차와 시각적으로 구분 */
@@ -7044,7 +7045,36 @@ const FINFAB = (function () {
   const L = FINVIEW.L;
   let el = null, bound = false, mode = 'down';
 
-  function target() { return document.getElementById('podFinPanel'); }
+  // 재무 패널은 항상 #mainContent 안에 렌더된다. 탭 전환 잔여 노드를 잡지 않도록 범위를 한정
+  function target() {
+    const mc = document.getElementById('mainContent');
+    return (mc && mc.querySelector('#podFinPanel')) || document.getElementById('podFinPanel');
+  }
+  function docTopOf(node) {
+    const se = document.scrollingElement || document.documentElement;
+    const cur = window.pageYOffset != null ? window.pageYOffset : (se ? se.scrollTop : 0);
+    return node.getBoundingClientRect().top + cur;
+  }
+  function maxScroll() {
+    const se = document.scrollingElement || document.documentElement;
+    return Math.max(0, (se ? se.scrollHeight : 0) - (window.innerHeight || 0));
+  }
+  // smooth 옵션 미지원·차단 환경까지 커버하는 스크롤 실행기
+  function goTo(top) {
+    const se = document.scrollingElement || document.documentElement;
+    const dest = Math.max(0, Math.min(top, maxScroll()));
+    const before = window.pageYOffset != null ? window.pageYOffset : (se ? se.scrollTop : 0);
+    try { window.scrollTo({ top: dest, behavior: 'smooth' }); }
+    catch (e) { try { window.scrollTo(0, dest); } catch (e2) { if (se) se.scrollTop = dest; } }
+    // 250ms 뒤에도 전혀 움직이지 않았으면 즉시 이동으로 폴백
+    setTimeout(function () {
+      const now = window.pageYOffset != null ? window.pageYOffset : (se ? se.scrollTop : 0);
+      if (Math.abs(now - before) < 2 && Math.abs(dest - before) > 4) {
+        try { window.scrollTo(0, dest); } catch (e) { }
+        if (se && Math.abs((window.pageYOffset || se.scrollTop) - dest) > 4) se.scrollTop = dest;
+      }
+    }, 250);
+  }
   function activeView() { return (typeof state !== 'undefined' && state) ? state.activeView : ''; }
   function hasTarget() {
     const v = activeView();
@@ -7077,41 +7107,42 @@ const FINFAB = (function () {
       ? `<span class="fab-ico" aria-hidden="true">↓</span><span class="fab-txt">${L('재무구조 이동', 'Go to financing')}</span>`
       : `<span class="fab-ico" aria-hidden="true">↑</span><span class="fab-txt">${L('맨 위로', 'Back to top')}</span>`;
   }
-  function onClick() {
+  // 클릭 시점에 방향을 재판정한다(렌더 직후 레이아웃 미확정으로 mode가 굳는 문제 방지)
+  function resolveMode() {
     const t = hasTarget() ? target() : null;
-    if (mode === 'down' && t) {
-      const top = (t.getBoundingClientRect().top || 0) + (window.pageYOffset || 0) - 16;
-      if (typeof window.scrollTo === 'function') {
-        try { window.scrollTo({ top: top, behavior: 'smooth' }); }
-        catch (e) { window.scrollTo(0, top); }
-      }
-      if (typeof t.focus === 'function') { t.setAttribute('tabindex', '-1'); t.focus({ preventScroll: true }); }
-    } else {
-      if (typeof window.scrollTo === 'function') {
-        try { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        catch (e) { window.scrollTo(0, 0); }
-      }
-    }
-    setTimeout(update, 400);
+    if (!t) return 'up';
+    const vh = window.innerHeight || 800;
+    return (t.getBoundingClientRect().top > vh - 120) ? 'down' : 'up';
+  }
+  function onClick() {
+    mode = resolveMode();
+    const t = (mode === 'down' && hasTarget()) ? target() : null;
+    if (t) goTo(docTopOf(t) - 16);
+    else goTo(0);
+    // 부드러운 스크롤이 끝난 뒤 라벨을 갱신 (고정 지연 대신 정지 감지)
+    let ticks = 0, last = -1;
+    const timer = setInterval(function () {
+      const se = document.scrollingElement || document.documentElement;
+      const now = window.pageYOffset != null ? window.pageYOffset : (se ? se.scrollTop : 0);
+      if (now === last || ++ticks > 24) { clearInterval(timer); update(); }
+      last = now;
+    }, 60);
   }
   function update() {
     if (!applicable()) { if (el) el.classList.remove('is-on'); return; }
-    const e = ensure(), t = target();
-    if (hasTarget()) {
-      const vh = window.innerHeight || 800;
-      const top = t.getBoundingClientRect().top;
-      // 패널 상단이 화면 아래쪽에 있으면 '이동', 이미 지나쳤으면 '맨 위로'
-      mode = (top > vh - 120) ? 'down' : 'up';
-    } else {
-      mode = 'up';
-    }
+    const e = ensure();
+    mode = resolveMode();
     e.innerHTML = label();
     e.setAttribute('aria-label', mode === 'down' ? L('재무구조 패널로 이동', 'Scroll to the financing panel') : L('맨 위로 이동', 'Scroll back to top'));
     e.classList.add('is-on');
     e.classList.toggle('is-up', mode === 'up');
   }
+  // 레이아웃이 확정된 뒤 판정하도록 2프레임 지연 (innerHTML 직후 rect가 0으로 읽히는 문제 방지)
   function refresh() {
     ensure(); update();
+    const raf = window.requestAnimationFrame;
+    if (typeof raf === 'function') raf(function () { raf(update); });
+    else setTimeout(update, 32);
   }
   function hide() { if (el) el.classList.remove('is-on'); }
   return { refresh, update, hide };
